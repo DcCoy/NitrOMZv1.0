@@ -22,20 +22,20 @@ Find what you need:
 ---------------------------------------
 
 ## Updates
-* 12/2019 -- Change the parameter optimization algorithm to the rather new and extremely more efficient CMAES algorithm (https://en.wikipedia.org/wiki/CMA-ES)
-* 02/2020 -- Example batch jobs multi-optimization submission scripts added.
-* 08/2020 -- Development branch initiated by dbianchi
-* 09/2020 -- Re-organized code to store variables in bgc.Types structures, adding a "iMap" to map variables to Types, to be used for example in the "change_input" function etc.
+* 09/2022 -- First commit of NitrOMZv1.0
+
 ## Getting started
-#### Setting the root path
-    Let's call the path to iNitrOMZ/ -- $NITROMSPATH 
-      (1) Open the model initialization function
-            `$NITROMSPATH/iNitrOMZ_v6.0/bgc1d_src/bgc1d_initialize.m`
-            for editing and set: `bgc.root='$NITROMSPATH'`;
-      (2) open the template runscript  `$NITROMSPATH/iNitrOMZv6.0/runscripts/bgc_run.m`
-          for editing and set: `bgc1d_root='$NITROMSPATH/'`
+#### Edit bgc1d_src/bgc1d_initialize.m
+	Here, set general options:
+	RunName      = name of run
+	region       = 'ETSP', 'ETNP', or custom
+	wup_profile  = Data file for imposed vertical velocities (if requested via bgc.depthvar_up = 1)
+	Tau_profiles = Data file for depth-dependent restoring time-scales (if requested 
+	
+#### Add any additional paths to bgc1d_paths_init.m
+	For example, any user-created directories
 #### Run the model
-    Run the template script `$NITROMSPATH/iNitrOMZ_v6.0/runscripts/bgc_run.m` in MATLAB
+    Run the template script `runscripts/bgc1d_run.m` in MATLAB
 #### Customizing the run
     Change the model defaults by modifying the initialization scripts 
     in $NITROMSPATH/bgc1d_src/ (see section on Code structure for a detailing of the 
