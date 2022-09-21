@@ -14,84 +14,84 @@ Requires MATLAB 2013 or above.
 ---------------------------------------
 ---------------------------------------
 Find what you need:
-[Updates](.#-Updates)
-### Quick intro
-### Running iNitrOMZ
-### Code structure
+[Updates](.#-updates)
+[Getting started](.#-getting-started)
+[Code structure](.#-code-structure)
+[Support](.#-support)
+[How to cite](.#-how-to-cite)
 ---------------------------------------
 ---------------------------------------
 
 ## Updates
-* 09/2022 -- First commit of NitrOMZv1.0
+* 09/2022 -- First commit of NitrOMZv1.0 
 
 ## Getting started
-#### Edit bgc1d_src/bgc1d_initialize.m
-	Here, set general options:
-	RunName      = name of run
-	region       = 'ETSP', 'ETNP', or custom
-	wup_profile  = Data file for imposed vertical velocities (if requested via bgc.depthvar_up = 1)
-	Tau_profiles = Data file for depth-dependent restoring time-scales (if requested 
-	
-#### Add any additional paths to bgc1d_paths_init.m
-	For example, any user-created directories
-#### Run the model
-    Run the template script `runscripts/bgc1d_run.m` in MATLAB
-#### Customizing the run
-    Change the model defaults by modifying the initialization scripts 
-    in $NITROMSPATH/bgc1d_src/ (see section on Code structure for a detailing of the 
-    scripts)
-
-
+#### Update settings in runscripts/bgc1d_initialize.m
+	Set run-specific settings, such as:
+		RunName      = Set the name of the run
+		region       = Set region (i.e. 'ETSP')
+		FromRestart  = Switch to initialize run from a restart file
+		SaveRestart  = Switch to save output as a restart file
+		varsink      = Switch to use a Martin Curve for POC sinking speed, or a constant speed
+		depthvar_wup = Switch to use a constant or depth-dependent vertical upwelling velocity
+		depthvar_Kv  = Switch to use a constant or depth-dependent vertical diffusion profile
+		iTstep       = Switch to use a constant or variable time-step
+		depparams    = Switch to initialize depth-dependent parameters
+		RestoringOff = Switch to remove all restoring terms
+		forceanoxic  = Switch to force anoxia over a specific depth range
+	The user can also toggles settings for:
+		The vertical grid: (top, bottom, and dz)
+		Time-stepping: (dt, and rate of history output)
+		POC sinking speed: (Martin 'b' value, or constant speed value)
+		Diffusion: (constant value, or the depth-dependent parameters that control the Kv shape)
+		Restoring: (which tracers will have restoring turned on, and restoring time-scale parameters)
+		Anoxia: (depth bounds of forced anoxia)
+#### Update boundary conditions in bgc1d_src/bgc1d_initboundary.m
+	Modify any top/bottom boundary conditions for bgc.region 
+#### Update stoichiometric ratios and bgc parameters in bgc1d_src/bgc1d_initbgc_params.m
+	Modify the chemical form of organic matter (currently Anderson & Sarmiento 1994)
+	Update maximum rates, half-saturation constants for oxidants/reductants, and O2 inhibition parameters
+	Update parameters for calculation of N2O/NO2 yields from ammonium oxidation 
+#### Run the model using runscripts/bgc1d_run
+    Run the template script in MATLAB
+		bgc = bgc1d_run;
 
 ## Code structure 
- #### iNitrOMZ_v6.0/runscripts/  
-      Template scripts to run or optimize the model
-        - bgc_run.m -- template running script
+#### runscripts/  
+	Folder where NitrOMZ runscripts and settings files are stored
+		bgc1d_run.m        -- script to run the model
+		bgc1d_initialize.m -- script to toggle run settings
                    
- #### iNitrOMZ_v6.0/bgc1d_src/
-  ##### User-customizable initialization functions
-       
-        - bgc1d_initialize.m -- main initialization script. The user can modify 
-                                general model parameters.
-        - bgc1d_initboundary.m -- the user can specify/modify boudary conditions
-        - bgc1d_initbgc_params.m -- the user can specify/modify biogeochemical 
-                                    parameters
-        - bgc1d_initIso_params.m -- the user can specify/modify parameters related 
-                                    to N isotopes
-  
- ##### Core model functions 
-        - bgc1d_initialize_DepParam.m -- calculates dependant model parameters
-        - bgc1d_initIso_Dep_params.m -- calculates dependant model parameters 
-                                        related to N isotopes
-        - bgc1d_initIso_update_r15n.m -- used to update N isotopic fractions
-        - bgc1d_advection_diff_opt.m -- this is the model core. This function 
-                                        performs the advection and diffusion of 
-                                        model tracers, applies sources and sinks,
-                                        and applies restoring. Also handles model 
-                                        output archiving.
-        - bgc1d_sourcesink.m -- calculates sources and sinks of model tracers
-        - bgc1d_restoring_initialize.m -- initializes lateral restoring forcing
-        - bgc1d_restoring.m -- calculates lateral restoring of model tracers
-        - not listed here: small utility functions used during intergration (e.g., n2o_yield.m)
+#### bgc1d_run/  
+	Folder where core model functions are stored
+		bgc1d_advection_diff_opt.m    -- NitrOMZ advection/diffusion module
+		bgc1d_initbgc_params.m        -- NitrOMZ nitrogen cycle parameters
+		bgc1d_initboundary.m          -- Region-specific top/bottom boundary conditions
+		bgc1d_initialize_DepParam.m   -- Calculates dependent model parameter values
+		bgc1d_process_time_stepping.m -- Function to calculate time-stepping variables
+		bgc1d_restoring.m             -- Applies lateral restoring forcing for selected (or all) tracers
+		bgc1d_restoring_initialize.m  -- Initializes lateral restoring forcing
+		bgc1d_sourcesink.m            -- Calculates sources and sinks for model tracers
 
-      
- #### iNitrOMZ_v6.0/processing/ 
-      Processing functions usefull for analysing the solution
-        - bgc1d_postprocess.m -- processes the final archived model solution into 
-                                  a user-friendly structure 
-        - more not listed here ...
+#### processing/ 
+	Folder where post-processing functions are stored
+		bgc1d_postprocess.m -- Process the final archived model soltution into a user-friendly structure
         
- #### iNitrOMZ_v6.0/Data/
-     Forcing and validation data .
-       
- #### iNitrOMZ_v6.0/restart/
-      Where restart files are stored
-       
- #### iNitrOMZ_v6.0/saveOut/
-      Where model output is archived.
+#### data/
+	Region-specific forcing and validation data
+		compilation_ETNP_gridded.mat -- ETNP observed tracers, for validation 
+		compilation_ETSP_gridded.mat -- ETSP observed tracers, for validation
+		farfield_ETNP_gridded.mat    -- ETNP lateral restoring tracer concentrations 
+		farfield_ETNP_gridded.mat    -- ETSP lateral restoring tracer concentrations
+		comprates_ETSP.mat           -- ETSP observed N transformation rates, for validation
+		Tau_restoring.mat			 -- Region-specific restoring time-scales
+		vertical_CESM.mat			 -- Region-specific vertical upwelling data
+
+#### restart/
+	Folder to store restart files
       
 ## Support
-Contact Simon Yang or Daniele Bianchi at UCLA for support. 
+Contact Daniel McCoy or Daniele Bianchi at UCLA for support. 
 
 ## How to cite 
 Please cite this repository [![DOI](https://zenodo.org/badge/236965059.svg)](https://zenodo.org/badge/latestdoi/236965059)

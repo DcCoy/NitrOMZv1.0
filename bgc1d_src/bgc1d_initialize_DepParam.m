@@ -13,9 +13,9 @@ bgc.nvar  = length(bgc.varname); % number of tracers
 %%%%%%%%%%%% Paths %%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if strcmp(bgc.region, 'ETNP')
-	bgc.farfield_profiles = '/Data/farfield_ETNP_gridded.mat'; % farfield concentrations
+	bgc.farfield_profiles = '/data/farfield_ETNP_gridded.mat'; % farfield concentrations
 elseif strcmp(bgc.region,'ETSP')
-	bgc.farfield_profiles = '/Data/farfield_ETSP_gridded.mat'; % farfield concentrations
+	bgc.farfield_profiles = '/data/farfield_ETSP_gridded.mat'; % farfield concentrations
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

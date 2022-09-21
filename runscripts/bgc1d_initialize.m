@@ -1,27 +1,38 @@
 function bgc = bgc1d_initialize(bgc)
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % Initialization of model parameters 
-% Note that bgc/n-cycling parameters are defined in -- bgc1d_initbgc_params.m 
-% Note that boundary condition values are defined in - bgc1d_initboundary.m
-% Note that dependent parameters are updated in ------ bgc1d_initialize_DepParam.m
+% Note that bgc/n-cycling parameters are defined in -- bgc1d_src/bgc1d_initbgc_params.m 
+% Note that boundary condition values are defined in - bgc1d_src/bgc1d_initboundary.m
+% Note that dependent parameters are updated in ------ bgc1d_src/bgc1d_initialize_DepParam.m
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%% General %%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% root set in bgc1d_paths_init
+run('../bgc1d_paths_init.m');
+bgc.root        = my_root;            
 
 %%%%%%% User specific  %%%%%%%%%
-run('../bgc1d_paths_init.m');
-bgc.root         = my_root; % root set in bgc1d_paths_init
-bgc.RunName      = 'test_ETSP'; % set name of run
-bgc.region       = 'ETSP'; % set region
-bgc.wup_profile  = '/Data/vertical_CESM.mat'; % vertical velocities
-bgc.Tau_profiles = '/Data/Tau_restoring.mat'; % Depth dependent Restoring timescale
-bgc.visible      = 'on'; % Show figures in X window
-bgc.flux_diag    = 0; % Save fluxes online
-bgc.FromRestart = 0; % initialize from restart? 1 yes, 0 no
-bgc.RestartFile = 'ETSP_restart.mat'; % restart file
-bgc.SaveRestart = 0; %Save restart file? 1 yes, 0 no
+bgc.RunName      = 'test_ETSP'; % Set name of run
+bgc.region       = 'ETSP';      % Set region ('ETSP','ETNP', or a custom region)
+bgc.visible      = 'on';        % If ('on)' then show figures in window, 'off' to make invisible
+bgc.flux_diag    = 0;           % If (1) then save fluxes online
+bgc.FromRestart  = 0;           % If (1) then initialize from restart? (0) No
+bgc.SaveRestart  = 0;           % If (1) then save restart file? (0) No
+bgc.varsink      = 1;           % If (1) then use Martin curve, else use constant sinking speed. 
+bgc.depthvar_wup = 0;           % Constant (0) or depth-dependent (1) upwelling velocity
+bgc.depthvar_Kv  = 1;           % Constant (0) or depth-dependent (1) diffusion profile
+bgc.iTstep       = 2;           % Constant (1) or variable (2) time-stepping
+bgc.depparams    = 1;			% Initialize dependent parameters that depend on bgc1d_initbgc_params 
+bgc.RestoringOff = 1;	        % If (1), turns restoring off for all variables
+bgc.forceanoxic  = 0;           % If (1), force anoxia over a given depth range
+bgc.tauZvar      = 1;           % If (1), use a depth-dependent restoring time-scale (requires bgc.Tau_profiles)
+
+%%%%%%% Data sources for wup, Tau, Restart  %%%%%%%%%
+bgc.wup_profile  = '/data/vertical_CESM.mat'; % vertical velocities
+bgc.Tau_profiles = '/data/Tau_restoring.mat'; % Depth dependent Restoring timescale
+bgc.RestartFile  = 'ETSP_restart.mat'; % restart file
 
 %%%%%%%% Vertical grid %%%%%%%%%
 bgc.npt = 130; % % number of mesh points for solution (for IVP)
@@ -29,8 +40,7 @@ bgc.ztop = -30; % top depth (m)
 bgc.zbottom = -1330; % bottom depth (m)
 
 %%%%% Time step / history %%%%%%
-iTstep = 2;
-switch iTstep
+switch bgc.iTstep
 % Constant dt
 case 1
 	% Specifies # timesteps, length and hist in timesteps 
@@ -62,7 +72,6 @@ bgc.rest_verbose = true; % prompts a message when loading restart
 
 %% Advection diffusion scheme %%
 % 'FTCS': Forward in time and centered in space
-% 'GCN': Generalized Crank-Nicolson (currently broken April 2019)
 bgc.advection = 'FTCS';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -74,7 +83,6 @@ bgc.tracers = {'o2', 'no3','poc', 'po4', 'n2o', 'nh4', 'no2', 'n2'};
 bgc.nvar_tr = length(bgc.tracers);
 
 %%%%%%% Particle sinking %%%%%%%
-bgc.varsink = 1; % if 1 then use Martin curve else, use constant sinking speed. 
 if bgc.varsink == 1
 	bgc.b = -0.7049; % Martin curve exponent: Pi = Phi0*(z/z0)^b
 else
@@ -82,13 +90,10 @@ else
 end
 
 %%%%%% Upwelling speed %%%%%%%%%
-% Choose constant (=0) or depth-dependent (=1) upwelling velocity
-% depth-dependent velocity requires a forcing file (set in bgc1d_initialize_DepParam.m)
-bgc.depthvar_wup = 0; 
+% Depth-dependent velocity requires a forcing file (set in bgc1d_initialize_DepParam.m)
 bgc.wup_param = 4.0 * 7.972e-8;% 1.8395e-7; % m/s  % note: 10 m/y = 3.1710e-07 m/s
 
 %%%%%%%%%%% Diffusion %%%%%%%%%%
-bgc.depthvar_Kv = 1; 
 bgc.Kv_param  = 2.0 * 1.701e-5; % constant vertical diffusion coefficient in m^2/s
 % For sigmoidal Kv, use the following parameters
 bgc.Kv_top = 0.70 * 2.0 * 1.701e-5;
@@ -105,9 +110,6 @@ bgc = bgc1d_initboundary(bgc);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%% BGC params %%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Initialize dependent parameters. (This should be on for optimization)
-bgc.depparams = 1;
-
 % Initialize BGC/N-cycling parameters (modify in bgc1d_initbgc_params.m)
 bgc = bgc1d_initbgc_params(bgc);
 
@@ -118,9 +120,7 @@ bgc = bgc1d_initbgc_params(bgc);
 % of horizontal advective and diffusive processes.
 
 %%%%%% On and off switches %%%%%%%%%
-% Restoring switches: 1 to restore, 0 for no restoring
-bgc.RestoringOff = 1;	% 1: turns restoring off for all variables
-		% (supersedes all following terms, used to speedup code)
+% Restoring switches: 1 to restore, 0 for no restoring. Note that RestoreOff will override these settings.
 bgc.PO4rest = 0;
 bgc.NO3rest = 0;
 bgc.O2rest  = 0;
@@ -128,11 +128,6 @@ bgc.N2Orest = 0 ;
 bgc.NH4rest = 0;
 bgc.N2rest  = 0;
 bgc.NO2rest = 0;
-
-%%%%%% Z-dependent restoring timescale %%%%%%%%%
-% Set to 1 for depth varying restoring timescales, 0 for constant
-% bgc.tauZvar = 1 requires a forcing file set in bgc1d_initialize_DepParam.m
-bgc.tauZvar = 1; 
 
 %%%%%% Physical scalings %%%%%%
 bgc.Rh = 1.0; 			% unitless scaling for sensitivity analysis. Default is 1.0
@@ -144,16 +139,12 @@ if bgc.tauZvar == 0
 end
 
 %%%%%% Force Anoxia %%%%%%
-% Option to force restoring to 0 oxygen in a certain depth range.
 % Useful to force the OMZ to span a target depth range or to remove
-% O2 intrusion in the OMZ while keeping restoring in the rest of the
-% water column
-% As usual, 1 is on and 0 is off 
-bgc.forceanoxic = 0;
+% O2 intrusion in the OMZ while keeping restoring in the rest of the water column
 % Choose depth range
 bgc.forceanoxic_bounds = [-350 -100]; 
 
-% Calculate BGC/N-cycling parameters  that depend on bgc1d_initbgc_params
+% Calculate BGC/N-cycling parameters that depend on bgc1d_initbgc_params
 if bgc.depparams
 	bgc = bgc1d_initialize_DepParam(bgc);
 end

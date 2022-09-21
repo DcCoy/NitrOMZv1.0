@@ -37,11 +37,10 @@ bgc = bgc1d_initialize(bgc);
 % ParNames = {'par1';'par2';...}
 % ParVal = [val1; val2; ...];
 % % % % % % % % % % % % % % % % % % % % 
-% Substitute the optimal parameters
-% Change parameters with those selected in Scenario_child(ichr).chromosome
+% Substitute any parameters from their values in bgc1d_src/bgc1d_initbgc_params.m
 if ~isempty(A.ParNames) 
 	for indp=1:length(A.ParNames)
-	   bgc = bgc1d_change_input(bgc,A.ParNames{indp},A.ParVal(indp));
+	   bgc = change_input(bgc,A.ParNames{indp},A.ParVal(indp));
 	end
 	% Updates BGC/N-cycling parameters  that depend on bgc1d_initbgc_params
 	if bgc.depparams
@@ -65,10 +64,10 @@ disp(['Runtime : ' num2str(bgc.RunTime)]);
 % Process observations to validate the model solution
 Tracer.name = {'o2' 'no3' 'poc' 'po4' 'n2o' 'nh4' 'no2' 'n2'};
 if strcmp(bgc.region,'ETNP')
-	load([bgc.root,'/Data/compilation_ETNP_gridded.mat']);
+	load([bgc.root,'/data/compilation_ETNP_gridded.mat']);
 	Data = proc_data(bgc,compilation_ETNP_gridded,Tracer.name);
 elseif strcmp(bgc.region,'ETSP')
-	load([bgc.root,'/Data/compilation_ETSP_gridded.mat']);
+	load([bgc.root,'/data/compilation_ETSP_gridded.mat']);
 	Data = proc_data(bgc,compilation_ETSP_gridded,Tracer.name);
 end
 
