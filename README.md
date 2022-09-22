@@ -84,6 +84,9 @@ Requires MATLAB 2013 or above.
 		bgc1d_plot_rates -- Plots the final N-cycle rate profiles
 		bgc1d_plot_vars  -- Plots the final N-cycle tracer profiles
       
+#### functions/
+	Folder containing additional functions needed to run the model
+
 ## Support
 Contact Daniel McCoy or Daniele Bianchi at UCLA for support. 
 
