@@ -36,16 +36,13 @@ Ammox = bgc.KAo .*  mm1(tr.o2,bgc.KO2Ao) .*  mm1(tr.nh4,bgc.KNH4Ao) ;
 Nitrox = bgc.KNo .*  mm1(tr.o2,bgc.KO2No) .* mm1(tr.no2,bgc.KNO2No);
 
 %----------------------------------------------------------------------
-% (4) N2O and NO2 production by ammox and nitrifier-denitrif 
+% (4) N2O and NO2 production by ammox
 %  Yields: nondimensional. Units of N, not N2O (molN-units, mmolN/m3/s): 
 %----------------------------------------------------------------------
 % Some AMMOX goes to N2O, most to NO2
 Y = n2o_yield(tr.o2, bgc);
-% via NH2OH
-Jnn2o_hx   = Ammox .* Y.nn2o_hx_nh4;
-Jno2_hx    = Ammox .* Y.no2_hx_nh4;
-% via NH4->NO2->N2O
-Jnn2o_nden = Ammox .* Y.nn2o_nden_nh4;
+Jn2o_ao = Ammox .* Y.n2o;
+Jno2_ao = Ammox .* Y.no2;
     
 % % % % % % % % % % % %
 % % %   J-ANOXIC  % % % 
@@ -72,32 +69,30 @@ sms.no3          =  Nitrox - bgc.NCden1 .* RemDen1;
 sms.poc          =  -(RemOx + RemDen1 + RemDen2 + RemDen3);
 sms.po4          =  bgc.PCrem .* (RemOx + RemDen1 + RemDen2 + RemDen3);
 sms.nh4          =  bgc.NCrem .* (RemOx + RemDen1 + RemDen2 + RemDen3) - (Jnn2o_hx + Jno2_hx + Jnn2o_nden) - Anammox; 
-sms.no2          =  Jno2_hx + bgc.NCden1 .* RemDen1 - bgc.NCden2 .* RemDen2 - Anammox - Nitrox; 
+sms.no2          =  Jno2_ao + bgc.NCden1 .* RemDen1 - bgc.NCden2 .* RemDen2 - Anammox - Nitrox; 
 sms.n2           =  bgc.NCden3 .* RemDen3 + Anammox; % (mmol N2/m3/s, units of N2, not N)
 sms.kpoc         = -(RemOx + RemDen1 + RemDen2 + RemDen3)./tr.poc;
-sms.n2oind.ammox = 0.5 .* Jnn2o_hx; % (mmol N2O/m3/s, units of N2O, not N)
-sms.n2oind.nden  = 0.5 .* Jnn2o_nden; % (mmol N2O/m3/s, units of N2O, not N)
+sms.n2oind.ammox = 0.5 .* Jn2o_ao; % (mmol N2O/m3/s, units of N2O, not N)
 sms.n2oind.den2  = 0.5 .* bgc.NCden2 .* RemDen2; % (mmol N2O/m3/s, units of N2O, not N)
 sms.n2oind.den3  = - bgc.NCden3 .* RemDen3; % (mmol N2O/m3/s, units of N2O, not N)
-sms.n2o          = (sms.n2oind.ammox + sms.n2oind.nden + sms.n2oind.den2 + sms.n2oind.den3);
+sms.n2o          = (sms.n2oind.ammox + sms.n2oind.den2 + sms.n2oind.den3);
 
 %---------------------------------------------------------------------- 
 % (9) Here adds diagnostics, to be handy when needed
 %---------------------------------------------------------------------- 
-diag.RemOx      = RemOx; % mmolC/m3/s
-diag.Ammox      = Ammox; % mmolN/m3/s
-diag.Nitrox     = Nitrox; % mmolN/m3/s
-diag.Anammox    = Anammox;	% mmolN2/m3/s
-diag.RemDen1    = RemDen1;	% mmolC/m3/s
-diag.RemDen2    = RemDen2;	% mmolC/m3/s
-diag.RemDen3    = RemDen3; % mmolC/m3/s
-diag.RemDen     = RemDen1 + RemDen2 + RemDen3;	%mmolC/m3/s
-diag.Jno2_hx    = Jno2_hx;	% mmolN/m3/s
-diag.Jnn2o_hx   = Jnn2o_hx;	% mmolN/m3/s
-diag.Jnn2o_nden = Jnn2o_nden; % mmolN/m3/s
-diag.Jn2o_prod  = sms.n2oind.ammox + sms.n2oind.nden + sms.n2oind.den2; % mmolN2O/m3/s
-diag.Jn2o_cons  = sms.n2oind.den3; % mmolN2O/m3/s
-diag.Jno2_prod  = Jno2_hx + bgc.NCden1 .* RemDen1; % mmolN/m3/s
-diag.Jno2_cons  = - bgc.NCden2 .* RemDen2 - Anammox - Nitrox; % mmolN/m3/s
+diag.RemOx      = RemOx;                                       % mmolC/m3/s
+diag.Ammox      = Ammox;                                       % mmolN/m3/s
+diag.Nitrox     = Nitrox;                                      % mmolN/m3/s
+diag.Anammox    = Anammox;                                     % mmolN2/m3/s
+diag.RemDen1    = RemDen1;                                     % mmolC/m3/s
+diag.RemDen2    = RemDen2;                                     % mmolC/m3/s
+diag.RemDen3    = RemDen3;                                     % mmolC/m3/s
+diag.RemDen     = RemDen1 + RemDen2 + RemDen3;                 % mmolC/m3/s
+diag.Jno2_ao    = Jno2_ao;                                     % mmolN/m3/s
+diag.Jn2o_ao    = Jn2o_ao;                                     % mmolN/m3/s
+diag.Jn2o_prod  = sms.n2oind.ammox  + sms.n2oind.den2;         % mmolN2O/m3/s
+diag.Jn2o_cons  = sms.n2oind.den3;                             % mmolN2O/m3/s
+diag.Jno2_prod  = Jno2_ao + bgc.NCden1 .* RemDen1;             % mmolN/m3/s
+diag.Jno2_cons  = - bgc.NCden2 .* RemDen2 - Anammox - Nitrox;  % mmolN/m3/s
 diag.kpoc       = -(RemDen1 -RemDen2-RemDen3-RemOx) ./ tr.poc; % 1/s
 %---------------------------------------------------------------------- 
