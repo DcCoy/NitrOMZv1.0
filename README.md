@@ -73,8 +73,8 @@ Requires MATLAB 2013 or above.
 		farfield_ETNP_gridded.mat    -- ETNP lateral restoring tracer concentrations 
 		farfield_ETNP_gridded.mat    -- ETSP lateral restoring tracer concentrations
 		comprates_ETSP.mat           -- ETSP observed N transformation rates, for validation
-		Tau_restoring.mat			 -- Region-specific restoring time-scales
-		vertical_CESM.mat			 -- Region-specific vertical upwelling data
+		Tau_restoring.mat            -- Region-specific restoring time-scales
+		vertical_CESM.mat            -- Region-specific vertical upwelling data
 
 #### restart/
 	Folder to store restart files
