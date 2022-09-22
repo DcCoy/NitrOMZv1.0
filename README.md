@@ -95,6 +95,6 @@ Requires MATLAB 2013 or above.
 Contact Daniel McCoy or Daniele Bianchi at UCLA for support. 
 
 ## How to cite 
-Please cite this repository [![DOI](https://zenodo.org/badge/236965059.svg)](https://zenodo.org/badge/latestdoi/236965059)
+Please cite this repository [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7106115.svg)](https://doi.org/10.5281/zenodo.7106115)
 
 Manuscript reference soon to come.
