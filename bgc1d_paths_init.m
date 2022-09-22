@@ -3,7 +3,6 @@ addpath('./bgc1d_src/');
 addpath('./processing/');
 addpath('./runscripts/');
 addpath('./plotting/');
-addpath('./Data/');
+addpath('./data/');
 addpath('./restart/');
-addpath('./saveOut/');
 addpath('./functions/');

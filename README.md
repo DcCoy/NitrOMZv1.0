@@ -35,9 +35,9 @@ Requires MATLAB 2013 or above.
 		Diffusion: (constant value, or the depth-dependent parameters that control the Kv shape)
 		Restoring: (which tracers will have restoring turned on, and restoring time-scale parameters)
 		Anoxia: (depth bounds of forced anoxia)
-#### Update boundary conditions in bgc1d_src/bgc1d_initboundary.m
+#### Update boundary conditions in runscripts/bgc1d_initboundary.m
 	Modify any top/bottom boundary conditions for bgc.region 
-#### Update stoichiometric ratios and bgc parameters in bgc1d_src/bgc1d_initbgc_params.m
+#### Update stoichiometric ratios and bgc parameters in runscripts/bgc1d_initbgc_params.m
 	Modify the chemical form of organic matter (currently Anderson & Sarmiento 1994)
 	Update maximum rates, half-saturation constants for oxidants/reductants, and O2 inhibition parameters
 	Update parameters for calculation of N2O/NO2 yields from ammonium oxidation 
@@ -47,15 +47,15 @@ Requires MATLAB 2013 or above.
 
 ## Code structure 
 #### runscripts/  
-	Folder where NitrOMZ runscripts and settings files are stored
-		bgc1d_run.m        -- script to run the model
-		bgc1d_initialize.m -- script to toggle run settings
+	Folder where NitrOMZ runscripts and run settings files are stored
+		bgc1d_run.m            -- script to run the model
+		bgc1d_initialize.m     -- script to toggle run settings
+		bgc1d_initboundary.m   -- script to toggle region-specific top/bottom boundary conditions
+		bgc1d_initbgc_params.m -- script to toggle nitrogen cycle parameters
                    
 #### bgc1d_run/  
 	Folder where core model functions are stored
 		bgc1d_advection_diff_opt.m    -- NitrOMZ advection/diffusion module
-		bgc1d_initbgc_params.m        -- NitrOMZ nitrogen cycle parameters
-		bgc1d_initboundary.m          -- Region-specific top/bottom boundary conditions
 		bgc1d_initialize_DepParam.m   -- Calculates dependent model parameter values
 		bgc1d_process_time_stepping.m -- Function to calculate time-stepping variables
 		bgc1d_restoring.m             -- Applies lateral restoring forcing for selected (or all) tracers
@@ -78,6 +78,11 @@ Requires MATLAB 2013 or above.
 
 #### restart/
 	Folder to store restart files
+
+#### plotting/
+	Folder containing post-run plotting scripts
+		bgc1d_plot_rates -- Plots the final N-cycle rate profiles
+		bgc1d_plot_vars  -- Plots the final N-cycle tracer profiles
       
 ## Support
 Contact Daniel McCoy or Daniele Bianchi at UCLA for support. 
