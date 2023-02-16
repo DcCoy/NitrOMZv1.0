@@ -28,6 +28,7 @@ bgc.depparams    = 1;			% Initialize dependent parameters that depend on bgc1d_i
 bgc.RestoringOff = 1;	        % If (1), turns restoring off for all variables
 bgc.forceanoxic  = 0;           % If (1), force anoxia over a given depth range
 bgc.tauZvar      = 1;           % If (1), use a depth-dependent restoring time-scale (requires bgc.Tau_profiles)
+bgc.RunIsotopes = true; % true -> run with isotopes
 
 %%%%%%% Data sources for wup, Tau, Restart  %%%%%%%%%
 bgc.wup_profile  = '/data/vertical_CESM.mat'; % vertical velocities
@@ -81,6 +82,7 @@ bgc.advection = 'FTCS';
 %%%% Prognostic variables %%%%%%
 bgc.tracers = {'o2', 'no3','poc', 'po4', 'n2o', 'nh4', 'no2', 'n2'};
 bgc.nvar_tr = length(bgc.tracers);
+bgc.isotopes = {'i15no3', 'i15no2', 'i15nh4', 'i15n2oA', 'i15n2oB'};
 
 %%%%%%% Particle sinking %%%%%%%
 if bgc.varsink == 1
@@ -112,6 +114,12 @@ bgc = bgc1d_initboundary(bgc);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Initialize BGC/N-cycling parameters (modify in bgc1d_initbgc_params.m)
 bgc = bgc1d_initbgc_params(bgc);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%% N Isotopes params %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Modify in bgc1d_initIso_params.m
+bgc =  bgc1d_initIso_params(bgc);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%% Restoring  %%%%%%%%%%
@@ -147,4 +155,8 @@ bgc.forceanoxic_bounds = [-350 -100];
 % Calculate BGC/N-cycling parameters that depend on bgc1d_initbgc_params
 if bgc.depparams
 	bgc = bgc1d_initialize_DepParam(bgc);
+    % Calculate dependant variables relate to isotopes
+	if bgc.RunIsotopes
+		bgc = bgc1d_initIso_Dep_params(bgc);
+	end
 end

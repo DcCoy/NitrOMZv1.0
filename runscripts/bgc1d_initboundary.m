@@ -19,6 +19,17 @@ case 'ETNP'
 	bgc.no2_bot = 0;                    % Bry cond. for deep nitrite            (mmolNO2/m3)
 	bgc.n2_top = 2.0;                   % Bry cond. for surface N2 excess       (mmolN2/m3)
 	bgc.n2_bot = 0.8131;                % Bry cond. for deep N2 excess          (mmolN2/m3)
+    bgc.d15no3_top = 11.0;              % Bry cond. for surface del15NO3        (permil)
+    bgc.d15no3_bot = 6.32;              % Bry cond. for deep del15NO3           (permil)
+    bgc.d15no2_top = 5.0;               % Bry cond. for surface del15NO2        (permil)
+    bgc.d15no2_bot = -40.0;             % Bry cond. for deep del15NO2           (permil)
+    bgc.d15nh4_top = 15.0;              % Bry cond. for surface del15NH4        (permil)
+    bgc.d15nh4_bot = 5.0;               % Bry cond. for deep del15NH4           (permil)
+    bgc.d15n2oA_top = 18.0;             % Bry cond. for surface delN2O-A        (permil)
+    bgc.d15n2oA_bot = 22.34;            % Bry cond. for deep delN2O-A           (permil)
+    bgc.d15n2oB_top = -3.0;             % Bry cond. for surface delN2O-B        (permil)
+    bgc.d15n2oB_bot = -2.6;             % Bry cond. for deep delN2O-B           (permil)	
+
 case 'ETSP'
 	bgc.poc_flux_top = -7.5/86400*0.8*1.85; % Bry cond. for top POC Flux            (mmolC/m2/s)
 	bgc.o2_top  = 225;                      % Bry cond. for surface Oxygen          (mmolO2/m3)
@@ -35,6 +46,17 @@ case 'ETSP'
 	bgc.no2_bot = 10^-23;                   % Bry cond. for surface nitrite         (mmolNO2/m3)
 	bgc.n2_top = 2.0;                       % Bry cond. for surface N2 excess       (mmolN2/m3)
 	bgc.n2_bot = 6.0;                       % Bry cond. for deep N2 excess          (mmolN2/m3)
+    bgc.d15no3_top = 15.0;                  % Bry cond. for surface del15NO3        (permil)
+    bgc.d15no3_bot = 5.0;                   % Bry cond. for deep del15NO3           (permil)
+    bgc.d15no2_top = 5.0;                   % Bry cond. for surface del15NO2        (permil)
+    bgc.d15no2_bot = 5.0;                   % Bry cond. for deep del15NO2           (permil)
+    bgc.d15nh4_top = 7.0;                   % Bry cond. for surface del15NH4        (permil)
+    bgc.d15nh4_bot = 7.0;                   % Bry cond. for deep del15NH4           (permil)
+    bgc.d15n2oA_top = 7.0;                  % Bry cond. for surface delN2O-A        (permil)
+    bgc.d15n2oA_bot = 20.0;                 % Bry cond. for deep delN2O-A           (permil)
+    bgc.d15n2oB_top = -5.0;                 % Bry cond. for surface delN2O-B        (permil)
+    bgc.d15n2oB_bot = -10.0;                % Bry cond. for deep delN2O-B           (permil)
+
 otherwise
 	error(['Region ' bgc.region ' not found']);
 	return
