@@ -16,15 +16,15 @@ function bgc = bgc1d_run(varargin)
 %   % BGC/N-cycling params       -- bgc1d_initbgc_params.m
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Add root path % CLK: moved this up so it's first
+run('../bgc1d_paths_init.m');
+addpath(genpath(my_root));
+
 % Process inputs (varargin)
-A.iPlot = 0;			% To plot output
+A.iPlot = 1;			% To plot output
 A.ParNames = {};		% Pass parameter names that need to be modified from default values
 A.ParVal = [];			% Pass parameter values, corresponding to ParNames
 A = parse_pv_pairs(A, varargin);
-
-% Add root path
-run('../bgc1d_paths_init.m');
-addpath(genpath(my_root));
 
 % Initialize the model
 clear bgc;
@@ -74,6 +74,7 @@ end
 % Process model output for analysis (gathers tracers and diagnostics into the bgc structure)
 bgc = bgc1d_postprocess(bgc, Data);
 if (A.iPlot)
-	bgc1d_plot(bgc); 
+	bgc1d_plot_vars(bgc); % CLK: change from "bgc1d_plot" to "bgc1d_plot_vars"
+    bgc1d_plot_rates(bgc); % CLK: add plot rates
 end
 

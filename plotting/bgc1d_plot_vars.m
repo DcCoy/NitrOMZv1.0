@@ -55,5 +55,6 @@ for indv=1:nvar;
 	xlim([var_range(1)-var_span/10 var_range(2)+var_span/10]);
 	grid on; box on; 
 end
-print('-dpng',['plots/bgc1d_vars']);
+print('../plotting/plots/bgc1d_vars','-dpng')  % temporary fix to get plots to save out
+%print('-dpng',['plots/bgc1d_vars']);
 

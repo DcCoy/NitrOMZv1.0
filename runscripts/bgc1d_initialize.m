@@ -14,8 +14,8 @@ run('../bgc1d_paths_init.m');
 bgc.root        = my_root;            
 
 %%%%%%% User specific  %%%%%%%%%
-bgc.RunName      = 'test_ETSP'; % Set name of run
-bgc.region       = 'ETSP';      % Set region ('ETSP','ETNP', or a custom region)
+bgc.RunName      = 'test_ETNP'; % Set name of run
+bgc.region       = 'ETNP';      % Set region ('ETSP','ETNP', or a custom region)
 bgc.visible      = 'on';        % If ('on)' then show figures in window, 'off' to make invisible
 bgc.flux_diag    = 0;           % If (1) then save fluxes online
 bgc.FromRestart  = 0;           % If (1) then initialize from restart? (0) No
