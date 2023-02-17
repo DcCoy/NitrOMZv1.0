@@ -22,7 +22,7 @@ run('../bgc1d_paths_init.m');
 addpath(genpath(my_root));
 
 % Process inputs (varargin)
-A.iPlot = 1;			% To plot output
+A.iPlot = 0;			% To plot output
 A.ParNames = {};		% Pass parameter names that need to be modified from default values
 A.ParVal = [];			% Pass parameter values, corresponding to ParNames
 A = parse_pv_pairs(A, varargin);
@@ -74,6 +74,9 @@ end
 
 % Process model output for analysis (gathers tracers and diagnostics into the bgc structure)
 bgc = bgc1d_postprocess(bgc, Data);
+if bgc.RunIsotopes
+    bgc = bgc1d_pprocess_isotopes(bgc);
+end
 if (A.iPlot)
 	bgc1d_plot_vars(bgc); % CLK: change from "bgc1d_plot" to "bgc1d_plot_vars"
     bgc1d_plot_rates(bgc); % CLK: add plot rates

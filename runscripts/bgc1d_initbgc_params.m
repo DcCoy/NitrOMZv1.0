@@ -29,7 +29,7 @@ bgc.KO2Ao = 0.333;       % 0.333+-0.130  % Half sat. constant for Ammonium oxida
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Nitrox: NO2 --> NO3
 bgc.KNo = 0.05/86400;   % 0.256 % Max. Nitrite oxidation rate (mmolN/m3/s) - Bristow 2017
-bgc.KNO2No = 1.0;       % Don't know (mmolN/m3)
+bgc.KNO2No = 1.0;       % Dont know (mmolN/m3)
 bgc.KO2No = 0.778;      % Half sat. constant of NO2 for Nitrite oxidation (mmolO2/m3) - Bristow 2017
 
 %%%%%%% Denitrification %%%%%%%

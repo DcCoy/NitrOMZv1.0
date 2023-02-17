@@ -83,6 +83,7 @@ bgc.advection = 'FTCS';
 bgc.tracers = {'o2', 'no3','poc', 'po4', 'n2o', 'nh4', 'no2', 'n2'};
 bgc.nvar_tr = length(bgc.tracers);
 bgc.isotopes = {'i15no3', 'i15no2', 'i15nh4', 'i15n2oA', 'i15n2oB'};
+bgc.nisotopes = length(bgc.isotopes);
 
 %%%%%%% Particle sinking %%%%%%%
 if bgc.varsink == 1

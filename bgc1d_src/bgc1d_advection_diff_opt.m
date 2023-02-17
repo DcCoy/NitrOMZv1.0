@@ -22,7 +22,7 @@ n2o		 = zeros(2,bgc.nz);
 n2		 = zeros(2,bgc.nz);
 po4      = zeros(2,bgc.nz);
 fpoc_out = zeros(2,bgc.nz+1);
-  
+
 if bgc.RunIsotopes
     i15no3 = zeros ( 2, bgc.nz );
     i15no2 = zeros ( 2, bgc.nz );
@@ -30,7 +30,6 @@ if bgc.RunIsotopes
     i15n2oA = zeros ( 2, bgc.nz );
     i15n2oB = zeros ( 2, bgc.nz );
 end
-
 
 % Run from initial conditions or from a restart file
 if bgc.FromRestart == 1  
@@ -61,8 +60,8 @@ else
 	po4(1,:) = linspace(bgc.po4_top,bgc.po4_bot,bgc.npt+1);
 if bgc.RunIsotopes
     i15no3(1,:) = linspace(bgc.i15no3_top,bgc.i15no3_bot,bgc.npt+1);
-    i15no2(1,:) = linspace(bgc.i15no2_top,bgc.i15no2_bot,bgc.npt+1); %10^-23*0.0037; 
-    i15nh4(1,:) = linspace(bgc.i15nh4_top,bgc.i15nh4_bot,bgc.npt+1); %10^-23*0.0037;
+    i15no2(1,:) = 10^-23*0.0037; % linspace(bgc.i15no2_top,bgc.i15no2_bot,bgc.npt+1);
+    i15nh4(1,:) = 10^-23*0.0037; %linspace(bgc.i15nh4_top,bgc.i15nh4_bot,bgc.npt+1);
     i15n2oA(1,:) = linspace(bgc.i15n2oA_top,bgc.i15n2oA_bot,bgc.npt+1);
     i15n2oB(1,:) = linspace(bgc.i15n2oB_top,bgc.i15n2oB_bot,bgc.npt+1);
 end
@@ -86,7 +85,7 @@ if bgc.RunIsotopes
 end
 
 % Get initial SMS
-sms =  bgc1d_sourcesink(bgc,tr);
+sms =  bgc1d_sourcesink_isotopes(bgc,tr);
 
 % Initialize particulate flux at the top
 fpoc_out(1,1) = bgc.poc_flux_top;
@@ -173,13 +172,12 @@ for indt=1:bgc.nt
 	no2(2,2:end-1) = no2(1,2:end-1) .* coeff1 + no2(1,3:end) .* coeff2 + no2(1,1:end-2) .* coeff3;
 	n2(2,2:end-1)  = n2(1,2:end-1)  .* coeff1 + n2(1,3:end)  .* coeff2 + n2(1,1:end-2)  .* coeff3;
     if bgc.RunIsotopes
-        i15no3(2,2:end-1) = i15no3(1,2:end-1)  .* coeff1 + i15no3(1,3:end)  .* coeff2 + i15no3(1,1:end-2)  .* coeff3;
-        i15no2(2,2:end-1) = i15no2(1,2:end-1)  .* coeff1 + i15no2(1,3:end)  .* coeff2 + i15no2(1:end-2)  .* coeff3;
-        i15nh4(2,2:end-1) = i15nh4(1,2:end-1)  .* coeff1 + i15nh4(1,3:end)  .* coeff2 + i15nh4(1,1:end-2)  .* coeff3;
-        i15n2oA(2,2:end-1) = i15n2oA(1,2:end-1)  .* coeff1 + i15n2oA(1,3:end)  .* coeff2 + i15n2oA(1,1:end-2)  .* coeff3;
-        i15n2oB(2,2:end-1) = i15n2oB(1,2:end-1)  .* coeff1 + i15n2oB(1,3:end)  .* coeff2 + i15n2oB(1,1:end-2)  .* coeff3;
+        i15no3(2,2:end-1)  = i15no3(1,2:end-1)  .* coeff1 + i15no3(1,3:end)  .* coeff2 + i15no3(1,1:end-2)  .* coeff3;
+        i15no2(2,2:end-1)  = i15no2(1,2:end-1)  .* coeff1 + i15no2(1,3:end)  .* coeff2 + i15no2(1,1:end-2)  .* coeff3;
+        i15nh4(2,2:end-1)  = i15nh4(1,2:end-1)  .* coeff1 + i15no2(1,3:end)  .* coeff2 + i15nh4(1,1:end-2)  .* coeff3;
+        i15n2oA(2,2:end-1)  = i15n2oA(1,2:end-1)  .* coeff1 + i15n2oA(1,3:end)  .* coeff2 + i15n2oA(1,1:end-2)  .* coeff3;
+        i15n2oB(2,2:end-1)  = i15n2oB(1,2:end-1)  .* coeff1 + i15n2oB(1,3:end)  .* coeff2 + i15n2oB(1,1:end-2)  .* coeff3;
     end
-
 	% Get sources minus Sinks	
 	% dump tracers in a structure "tr" - one by one (avoids eval)
 	tr.o2  = o2(1,:);
@@ -199,7 +197,7 @@ for indt=1:bgc.nt
     end
 
 	% Calculate SMS
-	sms =  bgc1d_sourcesink(bgc,tr);
+	sms =  bgc1d_sourcesink_isotopes(bgc,tr);
 
 	% Update steady state POC sinking flux
 	fpoc_out(2,1) = bgc.poc_flux_top;
@@ -219,12 +217,12 @@ for indt=1:bgc.nt
 	n2(2,2:end-1)  = n2(2,2:end-1)  + sms.n2(2:end-1)  * dt;
 	po4(2,2:end-1) = po4(2,2:end-1) + sms.po4(2:end-1) * dt;
     if bgc.RunIsotopes
-  		i15no3(2,2:end-1) = i15no3(2,2:end-1)  + sms.i15no3(2:end-1).*bgc.dt;
-  		i15no2(2,2:end-1) = i15no2(2,2:end-1)  + sms.i15no2(2:end-1).*bgc.dt;
-		i15nh4(2,2:end-1) = i15nh4(2,2:end-1)  + sms.i15nh4(2:end-1).*bgc.dt;
-  		i15n2oA(2,2:end-1) = i15n2oA(2,2:end-1)  + sms.i15n2oA(2:end-1).*bgc.dt;
-  		i15n2oB(2,2:end-1) = i15n2oB(2,2:end-1)  + sms.i15n2oB(2:end-1).*bgc.dt;
-  	end
+  		i15no3(2,2:end-1) = i15no3(2,2:end-1)  + sms.i15no3(2:end-1).* dt;
+  		i15no2(2,2:end-1) = i15no2(2,2:end-1)  + sms.i15no2(2:end-1).* dt;
+		i15nh4(2,2:end-1) = i15nh4(2,2:end-1)  + sms.i15nh4(2:end-1).* dt;
+  		i15n2oA(2,2:end-1) = i15n2oA(2,2:end-1)  + sms.i15n2oA(2:end-1).* dt;
+  		i15n2oB(2,2:end-1) = i15n2oB(2,2:end-1)  + sms.i15n2oB(2:end-1).* dt;
+    end
 
 	% Do restoring    
 	if bgc.RestoringOff~=1
@@ -237,11 +235,11 @@ for indt=1:bgc.nt
 		n2(2,2:end-1)  = n2(2,2:end-1)  + restoring.n2(2:end-1)  * dt;
 		po4(2,2:end-1) = po4(2,2:end-1) + restoring.po4(2:end-1) * dt;  
         if bgc.RunIsotopes
-  		i15no3(2,2:end-1) = i15no3(2,2:end-1)  + restoring.i15no3(2:end-1).*bgc.dt;
-  		i15no2(2,2:end-1) = i15no2(2,2:end-1)  + restoring.i15no2(2:end-1).*bgc.dt;
-		i15nh4(2,2:end-1) = i15nh4(2,2:end-1)  + restoring.i15nh4(2:end-1).*bgc.dt;
-  		i15n2oA(2,2:end-1) = i15n2oA(2,2:end-1)  + restoring.i15n2oA(2:end-1).*bgc.dt;
-  		i15n2oB(2,2:end-1) = i15n2oB(2,2:end-1)  + restoring.i15n2oB(2:end-1).*bgc.dt;
+  		    i15no3(2,2:end-1) = i15no3(2,2:end-1)  + restoring.i15no3(2:end-1).* dt;
+  		    i15no2(2,2:end-1) = i15no2(2,2:end-1)  + restoring.i15no2(2:end-1).* dt;
+		    i15nh4(2,2:end-1) = i15nh4(2,2:end-1)  + restoring.i15nh4(2:end-1).* dt;
+  		    i15n2oA(2,2:end-1) = i15n2oA(2,2:end-1)  + restoring.i15n2oA(2:end-1).* dt;
+  		    i15n2oB(2,2:end-1) = i15n2oB(2,2:end-1)  + restoring.i15n2oB(2:end-1).* dt;
   	    end
 	end
 
@@ -260,7 +258,7 @@ for indt=1:bgc.nt
 		i15nh4(1,:) = i15nh4(2,:);
   		i15n2oA(1,:) = i15n2oA(2,:);
   		i15n2oB(1,:) = i15n2oB(2,:);
-  	end
+    end
 
 	% Save history files and diagnostics  
 	if any(bgc.hist_time_ind == indt)

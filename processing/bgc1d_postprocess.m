@@ -76,6 +76,14 @@ bgc.jn2o_cons  = 2.0 * diag.Jn2o_cons * cnvrt;     % nM N/d : Units of N, not N2
 bgc.jno2_prod  = diag.Jno2_prod  * cnvrt;	   % nM n/d
 bgc.jno2_cons  = diag.Jno2_cons  * cnvrt;	   % nM n/d
 bgc.sms_n2o    = sms.n2o         * cnvrt;	   % nM n/d
+%if bgc.RunIsotopes
+% 	bgc.r15no3 = sms.r15no3;
+% 	bgc.r15no2 = sms.r15no2;
+% 	bgc.r15nh4 = sms.r15nh4;
+% 	bgc.r15n2o = sms.r15n2o;
+%	bgc.r15n2oA = bgc.i15n2oA./bgc.n2o;
+%	bgc.r15n2oB = bgc.i15n2oB./bgc.n2o;
+% end
 
 % Other (for convenience)
 bgc.nh4tono2 = bgc.jno2_ao; % nM N/d
