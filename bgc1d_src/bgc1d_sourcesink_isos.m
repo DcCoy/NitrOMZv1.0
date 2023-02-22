@@ -54,6 +54,7 @@
      RemDen1 = bgc.KDen1.* mm1(t.no3,bgc.KNO3Den1) .* fexp(t.o2,bgc.KO2Den1) .* t.poc;
      RemDen2 = bgc.KDen2 .* mm1(t.no2,bgc.KNO2Den2) .* fexp(t.o2,bgc.KO2Den2) .* t.poc;
      RemDen3 = bgc.KDen3 .* mm1(t.n2o,bgc.KN2ODen3) .* fexp(t.o2,bgc.KO2Den3) .* t.poc;
+     RemDen4 = bgc.KDen4 .* mm1(t.no3,bgc.KNO3Den4) .* fexp(t.o2,bgc.KO2Den4) .* t.poc;
 
      %----------------------------------------------------------------------
      % (6) Anaerobic ammonium oxidation (molN-units):
@@ -129,6 +130,15 @@
  sms.n2oind.den4 = 0.5 .* bgc.NCden4 .* RemDen4;
  %sms.n2oind.den3  = - bgc.altKDen3.* fexp(t.o2,bgc.KO2Den3) .*t.n2o; % with first-order rate law
 
+ % N2O total SMS
+ if ~bgc.RunIsotopes
+ sms.n2o = (sms.n2oind.ammox ...
+     + sms.n2oind.nden ...
+     + sms.n2oind.den2 ...
+     + sms.n2oind.den3 ...
+     + sms.n2oind.den4);
+ 
+ else
  % calculate binomial probabilities
  [p1nh4, p2nh4, p3nh4, p4nh4] = binomial(bgc.r15nh4, bgc.r15nh4);
  [p1no2, p2no2, p3no2, p4no2] = binomial(bgc.r15no2, bgc.r15no2);
@@ -141,7 +151,7 @@
      + sms.n2oind.den3 ...
      + p4no3 .* sms.n2oind.den4);
 
- if bgc.RunIsotopes
+ 
 	 % Update 15N/N ratios
 	 bgc = bgc1d_initIso_update_r15n(bgc,t);
      %disp(bgc.r15nh4)

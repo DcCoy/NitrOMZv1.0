@@ -60,7 +60,11 @@ end
 %	  (1) o2 (2) no3 (3) poc (4) po4 (5) n2o (6) nh4 (7) no2 (8) n2
 % % % % % % % % % % % % % % % % % % % % % % % % 
 tic;
-[bgc.sol_time, ~, ~, ~, ~] = bgc1d_advection_diff_opt_original(bgc);
+if bgc.RunIsotopes
+    [bgc.sol_time, ~, ~, ~, ~] = bgc1d_advection_diff_opt_original(bgc);
+else
+    [bgc.sol_time, ~, ~, ~, ~] = bgc1d_advection_diff_opt(bgc);
+end
 bgc.RunTime = toc;
 disp(['Runtime : ' num2str(bgc.RunTime)]);
 
