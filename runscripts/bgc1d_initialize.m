@@ -14,7 +14,7 @@ run('../bgc1d_paths_init.m');
 bgc.root        = my_root;            
 
 %%%%%%% User specific  %%%%%%%%%
-bgc.RunName      = 'test_ETNP'; % Set name of run
+bgc.RunName      = 'spinup_ETNP'; % Set name of run
 bgc.region       = 'ETNP';      % Set region ('ETSP','ETNP', or a custom region)
 bgc.visible      = 'on';        % If ('on)' then show figures in window, 'off' to make invisible
 bgc.flux_diag    = 0;           % If (1) then save fluxes online
@@ -22,8 +22,8 @@ bgc.FromRestart  = 0;           % If (1) then initialize from restart? (0) No
 bgc.SaveRestart  = 0;           % If (1) then save restart file? (0) No
 bgc.varsink      = 1;           % If (1) then use Martin curve, else use constant sinking speed. 
 bgc.depthvar_wup = 0;           % Constant (0) or depth-dependent (1) upwelling velocity
-bgc.depthvar_Kv  = 1;           % Constant (0) or depth-dependent (1) diffusion profile
-bgc.iTstep       = 2;           % Constant (1) or variable (2) time-stepping
+bgc.depthvar_Kv  = 0; %1;       % Constant (0) or depth-dependent (1) diffusion profile %CLK: turning off depth-dependent allows us to replicate old model
+bgc.iTstep       = 3;           % Constant (1) or variable (2) time-stepping
 bgc.depparams    = 1;			% Initialize dependent parameters that depend on bgc1d_initbgc_params 
 bgc.RestoringOff = 1;	        % If (1), turns restoring off for all variables
 bgc.forceanoxic  = 0;           % If (1), force anoxia over a given depth range
@@ -33,7 +33,7 @@ bgc.RunIsotopes = true; % true -> run with isotopes
 %%%%%%% Data sources for wup, Tau, Restart  %%%%%%%%%
 bgc.wup_profile  = '/data/vertical_CESM.mat'; % vertical velocities
 bgc.Tau_profiles = '/data/Tau_restoring.mat'; % Depth dependent Restoring timescale
-bgc.RestartFile  = 'ETSP_restart.mat'; % restart file
+bgc.RestartFile  = 'ETNP_restart.mat'; % restart file
 
 %%%%%%%% Vertical grid %%%%%%%%%
 bgc.npt = 130; % % number of mesh points for solution (for IVP)
@@ -59,6 +59,16 @@ case 2
 	% Output time step
 	histTimey = 20; % history timestep (years)
 	[dt_vec time_vec hist_time_vec hist_time_ind hist_time] = bgc1d_process_time_stepping(dt,endTimey,histTimey);
+case 3
+	% smaller timesteps and shorter run for isotope testing
+	nt = 50000;% Simulation length in timesteps
+	dt = 100000; % timestep in seconds bgc.hist =  500; 
+	hist = 1000; % save a snapshot every X timesteps
+	endTimey = nt*dt/(365*86400); % end time of simulation (years)
+	histTimey = hist*dt/(365*86400); % history timestep (years)
+	% Creates dt and history vectors
+	[dt_vec time_vec hist_time_vec hist_time_ind hist_time] = bgc1d_process_time_stepping(dt,endTimey,histTimey);
+    bgc.dt = dt;
 otherwise
 	error('Timestep mode not found');
 end
@@ -94,10 +104,10 @@ end
 
 %%%%%% Upwelling speed %%%%%%%%%
 % Depth-dependent velocity requires a forcing file (set in bgc1d_initialize_DepParam.m)
-bgc.wup_param = 4.0 * 7.972e-8;% 1.8395e-7; % m/s  % note: 10 m/y = 3.1710e-07 m/s
+bgc.wup_param = 1.683e-7; %4.0 * 7.972e-8;% 1.8395e-7; % m/s  % note: 10 m/y = 3.1710e-07 m/s % v5.4: 1.683e-7;
 
 %%%%%%%%%%% Diffusion %%%%%%%%%%
-bgc.Kv_param  = 2.0 * 1.701e-5; % constant vertical diffusion coefficient in m^2/s
+bgc.Kv_param  = 1.701e-5; %2.0 * 1.701e-5; % constant vertical diffusion coefficient in m^2/s % v5.4: 1.701e-5;
 % For sigmoidal Kv, use the following parameters
 bgc.Kv_top = 0.70 * 2.0 * 1.701e-5;
 bgc.Kv_bot = 1.00 * 2.0 * 1.701e-5;
@@ -114,7 +124,8 @@ bgc = bgc1d_initboundary(bgc);
 %%%%%%%%% BGC params %%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Initialize BGC/N-cycling parameters (modify in bgc1d_initbgc_params.m)
-bgc = bgc1d_initbgc_params(bgc);
+%bgc = bgc1d_initbgc_params(bgc);
+bgc = bgc1d_initbgc_params_original(bgc); % replicate old version of the model
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% N Isotopes params %%%%%%%
@@ -137,6 +148,11 @@ bgc.N2Orest = 0 ;
 bgc.NH4rest = 0;
 bgc.N2rest  = 0;
 bgc.NO2rest = 0;
+bgc.i15NO3rest = 0;
+bgc.i15NO2rest = 0;
+bgc.i15NH4rest = 0; 
+bgc.i15N2OArest = 0;
+bgc.i15N2OBrest = 0;
 
 %%%%%% Physical scalings %%%%%%
 bgc.Rh = 1.0; 			% unitless scaling for sensitivity analysis. Default is 1.0

@@ -11,6 +11,8 @@ O2toH2O_e = 4;
 HNO3toHNO2_e = 2;
 % Number of electrons required to reduce HNO2 to N2O ---> Need to check b/c # of N atoms changes
 HNO2toN2O_e = 2;
+%numbers of electrons required to reduce HNO3 to N2O
+HNO3toN2O_e = 4;
 % Number of electrons required to reduce N2O to N2
 N2OtoN2_e = 2;
 
@@ -21,4 +23,9 @@ bgc.PCrem = 1 / a;                             % Phosphate to Carbon denitrifica
 bgc.NCden1 = (Corg_e / HNO3toHNO2_e) / a;      % Nitrate to Carbon ratio during nitrate reduction (molNO3/molC)
 bgc.NCden2 = (Corg_e / HNO2toN2O_e) / a;       % Nitrite to Carbon ratio during nitrite reduction to N2O (molNO2/molC)
 bgc.NCden3 = (Corg_e / N2OtoN2_e) / a;         % N2O to Carbon ratio during N2O reduction (molN2O/molC)
+bgc.NCden4 = (Corg_e / HNO3toN2O_e) / a;         % Nitrate to Carbon ratio during nitrate reduction to N2O (molNO3/molC)
+bgc.PCden1 = 1 / a;
+bgc.PCden2 = 1 / a;
+bgc.PCden3 = 1 / a;
 
+end

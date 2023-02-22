@@ -22,7 +22,7 @@ run('../bgc1d_paths_init.m');
 addpath(genpath(my_root));
 
 % Process inputs (varargin)
-A.iPlot = 0;			% To plot output
+A.iPlot = 1;			% To plot output
 A.ParNames = {};		% Pass parameter names that need to be modified from default values
 A.ParVal = [];			% Pass parameter values, corresponding to ParNames
 A = parse_pv_pairs(A, varargin);
@@ -44,6 +44,8 @@ if ~isempty(A.ParNames)
 	   bgc = change_input(bgc,A.ParNames{indp},A.ParVal(indp));
 	end
 	% Updates BGC/N-cycling parameters  that depend on bgc1d_initbgc_params
+    % CLK: isn't this redundant, since we also call it at the end of
+    % bgc1d_initialize?
 	if bgc.depparams
 	   bgc = bgc1d_initialize_DepParam(bgc);
 	end
@@ -58,15 +60,20 @@ end
 %	  (1) o2 (2) no3 (3) poc (4) po4 (5) n2o (6) nh4 (7) no2 (8) n2
 % % % % % % % % % % % % % % % % % % % % % % % % 
 tic;
-[bgc.sol_time, ~, ~, ~, ~] = bgc1d_advection_diff_opt(bgc);
+[bgc.sol_time, ~, ~, ~, ~] = bgc1d_advection_diff_opt_original(bgc);
 bgc.RunTime = toc;
 disp(['Runtime : ' num2str(bgc.RunTime)]);
 
 % Process observations to validate the model solution
-Tracer.name = {'o2' 'no3' 'poc' 'po4' 'n2o' 'nh4' 'no2' 'n2'};
+if bgc.RunIsotopes
+    Tracer.name = {'o2' 'no3' 'poc' 'po4' 'n2o' 'nh4' 'no2' 'n2' 'd15no2' 'd15no3' 'd15Na' 'd15Nb'};
+else
+    Tracer.name = {'o2' 'no3' 'poc' 'po4' 'n2o' 'nh4' 'no2' 'n2'};
+end
+
 if strcmp(bgc.region,'ETNP')
-	load([bgc.root,'/data/compilation_ETNP_gridded.mat']);
-	Data = proc_data(bgc,compilation_ETNP_gridded,Tracer.name);
+	load([bgc.root,'/data/compilation_ETNP_offshore.mat']);
+	Data = proc_data(bgc,compilation_offshore,Tracer.name);
 elseif strcmp(bgc.region,'ETSP')
 	load([bgc.root,'/data/compilation_ETSP_gridded.mat']);
 	Data = proc_data(bgc,compilation_ETSP_gridded,Tracer.name);
@@ -74,11 +81,12 @@ end
 
 % Process model output for analysis (gathers tracers and diagnostics into the bgc structure)
 bgc = bgc1d_postprocess(bgc, Data);
-if bgc.RunIsotopes
-    bgc = bgc1d_pprocess_isotopes(bgc);
-end
+
 if (A.iPlot)
 	bgc1d_plot_vars(bgc); % CLK: change from "bgc1d_plot" to "bgc1d_plot_vars"
     bgc1d_plot_rates(bgc); % CLK: add plot rates
+    if bgc.RunIsotopes
+        bgc1d_plotisotopes(bgc);
+    end
 end
 

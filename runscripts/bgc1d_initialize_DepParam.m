@@ -6,8 +6,13 @@ function bgc = bgc1d_initialize_DepParam(bgc)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%% Variables %%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if bgc.RunIsotopes ==1
+	bgc.varname = [bgc.tracers bgc.isotopes];
+else
 bgc.varname = bgc.tracers;
-bgc.nvar  = length(bgc.varname); % number of tracers
+end
+
+bgc.nvar  = length(bgc.varname);         % number of tracers
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%% Paths %%%%%%%%%%%%%

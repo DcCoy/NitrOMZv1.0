@@ -62,4 +62,39 @@ else
 	cout = zeros(size(bgc.zgrid));
 	restoring.n2 = (bgc.restore.n2_cout-t.n2)./tauh;
 end
-
+if bgc.RunIsotopes
+    if bgc.i15NO3rest==0
+    restoring.i15no3 = zeros(1,length(t.i15no3));
+    else
+    cout = zeros(size(bgc.zgrid));
+    restoring.i15no3 = (bgc.restore.i15no3_cout-t.i15no3)./tauh;
+    end
+    
+    if bgc.i15NO2rest==0
+    restoring.i15no2 = zeros(1,length(t.i15no2));
+    else
+    cout = zeros(size(bgc.zgrid));
+    restoring.i15no2 = (bgc.restore.i15no2_cout-t.i15no2)./tauh;
+    end
+    
+    if bgc.i15NH4rest==0
+    restoring.i15nh4 = zeros(1,length(t.i15nh4));
+    else
+    cout = zeros(size(bgc.zgrid));
+    restoring.i15nh4 = (bgc.restore.i15nh4_cout-t.i15nh4)./tauh;
+    end 
+    
+    if bgc.i15N2OArest==0
+    restoring.i15n2oA = zeros(1,length(t.i15n2oA));
+    else
+    cout = zeros(size(bgc.zgrid));
+    restoring.i15n2oA = (bgc.restore.i15no2A_cout-t.i15n2oA)./tauh;
+    end
+    
+    if bgc.i15N2OBrest==0
+    restoring.i15n2oB = zeros(1,length(t.i15n2oB));
+    else
+    cout = zeros(size(bgc.zgrid));
+    restoring.i15n2oB = (bgc.restore.i15n2ob_cout-t.i15n2oB)./tauh;
+    end
+end

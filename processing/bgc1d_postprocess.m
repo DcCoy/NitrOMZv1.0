@@ -26,10 +26,35 @@ for indt=1:bgc.nvar
 	bgc.(['d2' bgc.varname{indt}])(end) = 0;
 end
 
+if bgc.RunIsotopes
+    ii = dNiso('i15N', bgc.i15no3, 'i14N', bgc.no3);
+    idx = find(bgc.no3<bgc.IsoThreshold | bgc.i15no3<0);
+    bgc.d15no3 = ii.d15N;
+    bgc.d15no3(idx)=nan;
+    ii = dNiso('i15N', bgc.i15no2, 'i14N', bgc.no2);
+        idx = find(bgc.no2<bgc.IsoThreshold | bgc.i15no2<0);
+    bgc.d15no2 = ii.d15N;
+    bgc.d15no2(idx)=nan;
+    ii = dNiso('i15N', bgc.i15nh4, 'i14N', bgc.nh4);
+    idx = find(bgc.nh4<bgc.IsoThreshold | bgc.i15nh4<0);
+    bgc.d15nh4 = ii.d15N;
+    bgc.d15nh4(idx)=nan;
+    ii = dNiso('i15N', bgc.i15n2oA, 'i14N', bgc.n2o);
+    idx = find(bgc.n2o<bgc.IsoThreshold/1000 | bgc.i15n2oA<0);
+    bgc.d15n2oA = ii.d15N;
+    bgc.d15n2oA(idx)=nan;
+    ii = dNiso('i15N', bgc.i15n2oB, 'i14N', bgc.n2o);
+    idx = find(bgc.n2o<bgc.IsoThreshold/1000 | bgc.i15n2oB<0);
+    bgc.d15n2oB = ii.d15N;
+    bgc.d15n2oB(idx)=nan;
+end
+
 % Add observational data ('Data_*')
 if nargin>1
-	ntrData = length(bgc.varname);
-	tmp = strcat('Data_', bgc.varname);
+	%ntrData = length(bgc.varname);
+    %tmp = strcat('Data_', bgc.varname);
+    ntrData = length(Data.name); % data includes d15Na and d15Nb instead of i15Na and i15Nb
+    tmp = strcat('Data_', Data.name); % so we want to loop through data column names instead of bgc varname
 	for indt=1:ntrData
 		try
 			bgc.(tmp{indt}) = Data.val(indt,:);
@@ -57,7 +82,12 @@ bgc.ssN2ODiff = bgc.Kv .* bgc.d2n2o;
 for indv=1:length(bgc.tracers)
 	tr.(bgc.tracers{indv}) = bgc.(bgc.tracers{indv});
 end
-[sms diag] = bgc1d_sourcesink(bgc,tr); 
+if bgc.RunIsotopes
+    for indv=1:length(bgc.isotopes)
+	    tr.(bgc.isotopes{indv}) = bgc.(bgc.isotopes{indv});
+    end
+end
+[sms diag] = bgc1d_sourcesink_isos(bgc,tr); 
 
 % Converts from (uM N/s) to (nM N/d)
 cnvrt = 1000*3600*24;
@@ -69,6 +99,7 @@ bgc.remden     = diag.RemDen     * cnvrt;	   % nM C/d
 bgc.remden1    = diag.RemDen1    * cnvrt;	   % nM C/d
 bgc.remden2    = diag.RemDen2    * cnvrt;	   % nM C/d
 bgc.remden3    = diag.RemDen3    * cnvrt;	   % nM C/d
+bgc.remden4    = diag.RemDen4    * cnvrt;	   % nM C/d
 bgc.jn2o_ao    = diag.Jn2o_ao    * cnvrt;	   % nM N/d
 bgc.jno2_ao    = diag.Jno2_ao    * cnvrt;	   % nM N/d
 bgc.jn2o_prod  = 2.0 * diag.Jn2o_prod * cnvrt;     % nM N/d : Units of N, not N2O
@@ -76,14 +107,14 @@ bgc.jn2o_cons  = 2.0 * diag.Jn2o_cons * cnvrt;     % nM N/d : Units of N, not N2
 bgc.jno2_prod  = diag.Jno2_prod  * cnvrt;	   % nM n/d
 bgc.jno2_cons  = diag.Jno2_cons  * cnvrt;	   % nM n/d
 bgc.sms_n2o    = sms.n2o         * cnvrt;	   % nM n/d
-%if bgc.RunIsotopes
-% 	bgc.r15no3 = sms.r15no3;
-% 	bgc.r15no2 = sms.r15no2;
-% 	bgc.r15nh4 = sms.r15nh4;
-% 	bgc.r15n2o = sms.r15n2o;
-%	bgc.r15n2oA = bgc.i15n2oA./bgc.n2o;
-%	bgc.r15n2oB = bgc.i15n2oB./bgc.n2o;
-% end
+if bgc.RunIsotopes
+ 	bgc.r15no3 = sms.r15no3;
+ 	bgc.r15no2 = sms.r15no2;
+ 	bgc.r15nh4 = sms.r15nh4;
+ 	bgc.r15n2o = sms.r15n2o;
+	bgc.r15n2oA = bgc.i15n2oA./bgc.n2o;
+	bgc.r15n2oB = bgc.i15n2oB./bgc.n2o;
+ end
 
 % Other (for convenience)
 bgc.nh4tono2 = bgc.jno2_ao; % nM N/d

@@ -77,14 +77,6 @@ sms.n2oind.den2  = 0.5 .* bgc.NCden2 .* RemDen2; % (mmol N2O/m3/s, units of N2O,
 sms.n2oind.den3  = - bgc.NCden3 .* RemDen3; % (mmol N2O/m3/s, units of N2O, not N)
 sms.n2o          = (sms.n2oind.ammox + sms.n2oind.den2 + sms.n2oind.den3);
 
-if bgc.RunIsotopes
-    sms.i15no3 = RemOx * 0;
-    sms.i15no2 = RemOx * 0;
-    sms.i15nh4 = RemOx * 0;
-    sms.i15n2oA = RemOx * 0;
-    sms.i15n2oB = RemOx * 0;
-end
-
 %---------------------------------------------------------------------- 
 % (9) Here adds diagnostics, to be handy when needed
 %---------------------------------------------------------------------- 

@@ -85,7 +85,7 @@ if bgc.RunIsotopes
 end
 
 % Get initial SMS
-sms =  bgc1d_sourcesink_isotopes(bgc,tr);
+sms =  bgc1d_sourcesink_isos(bgc,tr);
 
 % Initialize particulate flux at the top
 fpoc_out(1,1) = bgc.poc_flux_top;
@@ -197,7 +197,7 @@ for indt=1:bgc.nt
     end
 
 	% Calculate SMS
-	sms =  bgc1d_sourcesink_isotopes(bgc,tr);
+	sms =  bgc1d_sourcesink_isos(bgc,tr);
 
 	% Update steady state POC sinking flux
 	fpoc_out(2,1) = bgc.poc_flux_top;
