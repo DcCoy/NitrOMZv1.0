@@ -1,8 +1,8 @@
 function bgc = bgc1d_initIso_update_r15n(bgc,t)
 
- % % % % % % % % % % % % % % % % % % % % % % % % % %
- % This function updates isotope ratios 
- % % % % % % % % % % % % % % % % % % % % % % % % % %
+ % % % % % % % % % % % % % % % % % % % % % % % % % % %
+ % This function calculates and updates atom fractions
+ % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
  %%%%%  ratios  %%%%%
  %%%%%%%%%%%%%%%%%%%%
