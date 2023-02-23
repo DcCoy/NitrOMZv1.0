@@ -85,12 +85,16 @@ Requires MATLAB 2013 or above.
 		bgc1d_plot_vars  -- Plots the final N-cycle tracer profiles
       
 #### functions/
-	Folder containing additional functions needed to run the model
+	Folder containing additional functions needed to run the model, such as:
+		fexp.m            -- Function to apply exponential O2-inhibition to anaerobic rates
+		mm1.m             -- Michaelis-Menten function
+		get_stoichiometry -- Function to calculate the stoichiometric conversion ratios
+		n2o_yield         -- Function to calculate N2O and NO2 yields from ammonium oxidation
 
 ## Support
 Contact Daniel McCoy or Daniele Bianchi at UCLA for support. 
 
 ## How to cite 
-Please cite this repository [![DOI](https://zenodo.org/badge/236965059.svg)](https://zenodo.org/badge/latestdoi/236965059)
+Please cite this repository [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7106115.svg)](https://doi.org/10.5281/zenodo.7106115)
 
 Manuscript reference soon to come.
