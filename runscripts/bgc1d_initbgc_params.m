@@ -68,15 +68,15 @@ bgc.n2o_yield = 'Yang';
 
 switch bgc.n2o_yield
 case 'Ji'
-	% Ji et al 2018
-	bgc.Ji_a = 0.2; 	% non-dimensional
-	bgc.Ji_b  = 0.08; 	% 1/(mmolO2/m3)
+   % Ji et al 2018
+   bgc.Ji_a = 0.2;    % non-dimensional
+   bgc.Ji_b  = 0.08;    % 1/(mmolO2/m3)
 case 'Yang'
-	% S. Yang March 15 2019 optimized results 
-	bgc.Ji_a = 0.30; 	% non-dimensional
-	bgc.Ji_b  = 0.10; 	% 1/(mmolO2/m3)
+   % S. Yang March 15 2019 optimized results 
+   bgc.Ji_a = 0.30;    % non-dimensional
+   bgc.Ji_b  = 0.10;    % 1/(mmolO2/m3)
 otherwise
-	error(['N2O yield ' bgc.n2o_yield  ' case not found']);
+   error(['N2O yield ' bgc.n2o_yield  ' case not found']);
 end
 
 

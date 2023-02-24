@@ -8,8 +8,8 @@ function [sms diag] =  bgc1d_sourcesink(bgc,tr);
 tmpvar = fields(tr);
 epsn = 1e-24;
 for indf=1:length(tmpvar)
-	tmp = max(epsn,tr.(tmpvar{indf}));
-	tr.(tmpvar{indf}) = tmp;
+   tmp = max(epsn,tr.(tmpvar{indf}));
+   tr.(tmpvar{indf}) = tmp;
 end
 
 % % % % % % % % % % % %

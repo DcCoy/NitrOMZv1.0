@@ -45,7 +45,7 @@ function map = lbmap(varargin)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % default arguments:
 A.num	        = 20;
-A.scheme        = 'salt';
+A.scheme      = 'salt';
 % Parse required variables, substituting defaults where necessary
 A = parse_pv_pairs(A, varargin);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

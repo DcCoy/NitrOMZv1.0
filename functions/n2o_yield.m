@@ -11,12 +11,12 @@ function Y = n2o_yield(o2,bgc);
 
 switch bgc.n2o_yield
 case {'Ji','Yang'}
-	% Scale original params
-	a1 = bgc.Ji_a ./ 100.0;
-	b1 = bgc.Ji_b ./ 100.0;
-	% Get total yields
-	Y.n2o = (a1+b1.*o2)./(a1+(b1+1).*o2);
-	Y.no2 = o2./(a1+(b1+1).* o2);
+   % Scale original params
+   a1 = bgc.Ji_a ./ 100.0;
+   b1 = bgc.Ji_b ./ 100.0;
+   % Get total yields
+   Y.n2o = (a1+b1.*o2)./(a1+(b1+1).*o2);
+   Y.no2 = o2./(a1+(b1+1).* o2);
 otherwise
-	error(['N2O yield case : ' bgc.n2o_yield ' not found']);
+   error(['N2O yield case : ' bgc.n2o_yield ' not found']);
 end

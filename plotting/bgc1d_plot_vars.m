@@ -12,13 +12,13 @@ A.col = [0 0 0];
 A = parse_pv_pairs(A,varargin);
 
 if A.fig==0
-	hfig = figure;
+   hfig = figure;
 else
-	hfig = figure(A.fig);
+   hfig = figure(A.fig);
 end
 
 if ~iscell(A.var)
-	A.var = {A.var};
+   A.var = {A.var};
 end  
 
 % Get subplots
@@ -28,32 +28,32 @@ sp1 = pp(1);
 sp2 = pp(2);
 
 for indv=1:nvar;
-	varname = A.var{indv};
-	var_plot = bgc.(varname) * A.fact; 
-	if isfield(bgc,['Data_' varname])
-		var_data = bgc.(['Data_' varname]);
-		var_range = [min([var_plot,var_data]) max([var_plot,var_data])];
-	else
-		var_range = [min(var_plot) max(var_plot)];
-	end
-	var_span = diff(var_range);
+   varname = A.var{indv};
+   var_plot = bgc.(varname) * A.fact; 
+   if isfield(bgc,['Data_' varname])
+      var_data = bgc.(['Data_' varname]);
+      var_range = [min([var_plot,var_data]) max([var_plot,var_data])];
+   else
+      var_range = [min(var_plot) max(var_plot)];
+   end
+   var_span = diff(var_range);
 
-	% Plots Variable
-	subplot(sp1,sp2,indv)
-	if A.data & isfield(bgc,['Data_' varname])
-		s=scatter(var_data(~isnan(var_data)), bgc.zgrid(~isnan(var_data)),'b');
-		s.LineWidth = 0.6;
-		s.MarkerEdgeColor = 'k';
-		s.MarkerFaceColor = [0.7 0.7 0.9];
-		hold on; 
-	end
-	plot(var_plot,bgc.zgrid,'-','color',A.col,'linewidth',3)
-	title([varname])
-	ylabel('z (m)')
-	xlabel([varname ' units'])
-	ylim([bgc.zbottom bgc.ztop]);
-	xlim([var_range(1)-var_span/10 var_range(2)+var_span/10]);
-	grid on; box on; 
+   % Plots Variable
+   subplot(sp1,sp2,indv)
+   if A.data & isfield(bgc,['Data_' varname])
+      s=scatter(var_data(~isnan(var_data)), bgc.zgrid(~isnan(var_data)),'b');
+      s.LineWidth = 0.6;
+      s.MarkerEdgeColor = 'k';
+      s.MarkerFaceColor = [0.7 0.7 0.9];
+      hold on; 
+   end
+   plot(var_plot,bgc.zgrid,'-','color',A.col,'linewidth',3)
+   title([varname])
+   ylabel('z (m)')
+   xlabel([varname ' units'])
+   ylim([bgc.zbottom bgc.ztop]);
+   xlim([var_range(1)-var_span/10 var_range(2)+var_span/10]);
+   grid on; box on; 
 end
 print('-dpng',['plots/bgc1d_vars']);
 

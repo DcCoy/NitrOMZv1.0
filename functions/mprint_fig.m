@@ -102,7 +102,7 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if A.silent~=0
-	disp(['print -d' Param.for ' ' Param.name ]);
+   disp(['print -d' Param.for ' ' Param.name ]);
 end
 eval(['print -d' Param.for ' ' Param.name ]);
 

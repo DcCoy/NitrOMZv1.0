@@ -24,8 +24,8 @@ bgc.varsink      = 1;           % If (1) then use Martin curve, else use constan
 bgc.depthvar_wup = 0;           % Constant (0) or depth-dependent (1) upwelling velocity
 bgc.depthvar_Kv  = 1;           % Constant (0) or depth-dependent (1) diffusion profile
 bgc.iTstep       = 2;           % Constant (1) or variable (2) time-stepping
-bgc.depparams    = 1;			% Initialize dependent parameters that depend on bgc1d_initbgc_params 
-bgc.RestoringOff = 1;	        % If (1), turns restoring off for all variables
+bgc.depparams    = 1;           % Initialize dependent parameters that depend on bgc1d_initbgc_params 
+bgc.RestoringOff = 1;           % If (1), turns restoring off for all variables
 bgc.forceanoxic  = 0;           % If (1), force anoxia over a given depth range
 bgc.tauZvar      = 1;           % If (1), use a depth-dependent restoring time-scale (requires bgc.Tau_profiles)
 
@@ -43,23 +43,23 @@ bgc.zbottom = -1330; % bottom depth (m)
 switch bgc.iTstep
 % Constant dt
 case 1
-	% Specifies # timesteps, length and hist in timesteps 
-	nt = 250*365;% Simulation length in timesteps
-	dt = 2.0*86400; % timestep in seconds bgc.hist =  500; 
-	hist = 365*10; % save a snapshot every X timesteps
-	endTimey = nt*dt/(365*86400); % end time of simulation (years)
-	histTimey = hist*dt/(365*86400); % history timestep (years)
-	% Creates dt and history vectors
-	[dt_vec time_vec hist_time_vec hist_time_ind hist_time] = bgc1d_process_time_stepping(dt,endTimey,histTimey);
+   % Specifies # timesteps, length and hist in timesteps 
+   nt = 250*365;% Simulation length in timesteps
+   dt = 2.0*86400; % timestep in seconds bgc.hist =  500; 
+   hist = 365*10; % save a snapshot every X timesteps
+   endTimey = nt*dt/(365*86400); % end time of simulation (years)
+   histTimey = hist*dt/(365*86400); % history timestep (years)
+   % Creates dt and history vectors
+   [dt_vec time_vec hist_time_vec hist_time_ind hist_time] = bgc1d_process_time_stepping(dt,endTimey,histTimey);
 % Variable time-stepping
 case 2
-	dt       = [5.0 2.0 1.0 0.5 0.25 0.125]*86400/2;
-	endTimey = [650 670 690 695 698 700];
-	% Output time step
-	histTimey = 20; % history timestep (years)
-	[dt_vec time_vec hist_time_vec hist_time_ind hist_time] = bgc1d_process_time_stepping(dt,endTimey,histTimey);
+   dt       = [5.0 2.0 1.0 0.5 0.25 0.125]*86400/2;
+   endTimey = [650 670 690 695 698 700];
+   % Output time step
+   histTimey = 20; % history timestep (years)
+   [dt_vec time_vec hist_time_vec hist_time_ind hist_time] = bgc1d_process_time_stepping(dt,endTimey,histTimey);
 otherwise
-	error('Timestep mode not found');
+   error('Timestep mode not found');
 end
 bgc.dt_vec = dt_vec;
 bgc.hist_time_ind = hist_time_ind;
@@ -84,9 +84,9 @@ bgc.nvar_tr = length(bgc.tracers);
 
 %%%%%%% Particle sinking %%%%%%%
 if bgc.varsink == 1
-	bgc.b = -0.7049; % Martin curve exponent: Pi = Phi0*(z/z0)^b
+   bgc.b = -0.7049; % Martin curve exponent: Pi = Phi0*(z/z0)^b
 else
-	bgc.wsink_param = -20/(86400); % constant speed (bgc.varsink==0)
+   bgc.wsink_param = -20/(86400); % constant speed (bgc.varsink==0)
 end
 
 %%%%%% Upwelling speed %%%%%%%%%
@@ -130,12 +130,12 @@ bgc.N2rest  = 0;
 bgc.NO2rest = 0;
 
 %%%%%% Physical scalings %%%%%%
-bgc.Rh = 1.0; 			% unitless scaling for sensitivity analysis. Default is 1.0
-bgc.Lh = 4000.0 * 1e3;	% m - horizontal scale
+bgc.Rh = 1.0;          % unitless scaling for sensitivity analysis. Default is 1.0
+bgc.Lh = 4000.0 * 1e3; % m - horizontal scale
 % if you chose constant restoring timescales
 if bgc.tauZvar == 0
-	bgc.Kh = 1000;		% m2/s - horizontal diffusion
-	bgc.Uh = 0.05;		% m/s - horizontal advection
+   bgc.Kh = 1000;      % m2/s - horizontal diffusion
+   bgc.Uh = 0.05;      % m/s - horizontal advection
 end
 
 %%%%%% Force Anoxia %%%%%%
@@ -146,5 +146,5 @@ bgc.forceanoxic_bounds = [-350 -100];
 
 % Calculate BGC/N-cycling parameters that depend on bgc1d_initbgc_params
 if bgc.depparams
-	bgc = bgc1d_initialize_DepParam(bgc);
+   bgc = bgc1d_initialize_DepParam(bgc);
 end

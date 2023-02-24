@@ -8,38 +8,38 @@ bgc.sol = squeeze(bgc.sol_time(end,:,:));
 
 % Get vertical derivatives
 for indt=1:bgc.nvar
-	bgc.(bgc.varname{indt}) = bgc.sol(indt,:);
-	if bgc.flux_diag == 1
-		bgc.(['adv' bgc.varname{indt}])  = bgc.sadv(indt,:);
-		bgc.(['diff' bgc.varname{indt}]) = bgc.sdiff(indt,:);
-		bgc.(['sms' bgc.varname{indt}])  = bgc.ssms(indt,:);
-		bgc.(['rest' bgc.varname{indt}]) = bgc.srest(indt,:);
-	end
-	bgc.(['d' bgc.varname{indt}]) = nan(size(bgc.(bgc.varname{indt})));
-	bgc.(['d' bgc.varname{indt}])(2:end-1) = (bgc.(bgc.varname{indt})(3:end) - bgc.(bgc.varname{indt})(1:end-2))/(-2*bgc.dz);
-	bgc.(['d' bgc.varname{indt}])(1) = 0; 
-	bgc.(['d' bgc.varname{indt}])(end) = 0;
-	bgc.(['d2' bgc.varname{indt}]) = nan(size(bgc.(['d' bgc.varname{indt}])));
-	bgc.(['d2' bgc.varname{indt}])(2:end-1) = (bgc.(bgc.varname{indt})(3:end) - 2 * bgc.(bgc.varname{indt})(2:end-1) + ...
-		bgc.(bgc.varname{indt})(1:end-2))/(bgc.dz^2);
-	bgc.(['d2' bgc.varname{indt}])(1) = 0;
-	bgc.(['d2' bgc.varname{indt}])(end) = 0;
+   bgc.(bgc.varname{indt}) = bgc.sol(indt,:);
+   if bgc.flux_diag == 1
+      bgc.(['adv' bgc.varname{indt}])  = bgc.sadv(indt,:);
+      bgc.(['diff' bgc.varname{indt}]) = bgc.sdiff(indt,:);
+      bgc.(['sms' bgc.varname{indt}])  = bgc.ssms(indt,:);
+      bgc.(['rest' bgc.varname{indt}]) = bgc.srest(indt,:);
+   end
+   bgc.(['d' bgc.varname{indt}]) = nan(size(bgc.(bgc.varname{indt})));
+   bgc.(['d' bgc.varname{indt}])(2:end-1) = (bgc.(bgc.varname{indt})(3:end) - bgc.(bgc.varname{indt})(1:end-2))/(-2*bgc.dz);
+   bgc.(['d' bgc.varname{indt}])(1) = 0; 
+   bgc.(['d' bgc.varname{indt}])(end) = 0;
+   bgc.(['d2' bgc.varname{indt}]) = nan(size(bgc.(['d' bgc.varname{indt}])));
+   bgc.(['d2' bgc.varname{indt}])(2:end-1) = (bgc.(bgc.varname{indt})(3:end) - 2 * bgc.(bgc.varname{indt})(2:end-1) + ...
+   bgc.(bgc.varname{indt})(1:end-2))/(bgc.dz^2);
+   bgc.(['d2' bgc.varname{indt}])(1) = 0;
+   bgc.(['d2' bgc.varname{indt}])(end) = 0;
 end
 
 % Add observational data ('Data_*')
 if nargin>1
-	ntrData = length(bgc.varname);
-	tmp = strcat('Data_', bgc.varname);
-	for indt=1:ntrData
-		try
-			bgc.(tmp{indt}) = Data.val(indt,:);
-		catch
-			display(['WARNING: did not find ', tmp{indt} ' in DATA']);
-		end
-	end
-	try
-		bgc.Data_nstar = bgc.Data_no3-bgc.NCrem/bgc.PCrem*bgc.Data_po4;
-	end
+   ntrData = length(bgc.varname);
+   tmp = strcat('Data_', bgc.varname);
+   for indt=1:ntrData
+      try
+         bgc.(tmp{indt}) = Data.val(indt,:);
+      catch
+         display(['WARNING: did not find ', tmp{indt} ' in DATA']);
+      end
+   end
+   try
+      bgc.Data_nstar = bgc.Data_no3-bgc.NCrem/bgc.PCrem*bgc.Data_po4;
+   end
 end
 
 % Additional tracers:
@@ -55,27 +55,27 @@ bgc.ssN2ODiff = bgc.Kv .* bgc.d2n2o;
 % Biological sources and sinks terms
 % Re-creates a "tracers" field to pass to SMS routine
 for indv=1:length(bgc.tracers)
-	tr.(bgc.tracers{indv}) = bgc.(bgc.tracers{indv});
+   tr.(bgc.tracers{indv}) = bgc.(bgc.tracers{indv});
 end
 [sms diag] = bgc1d_sourcesink(bgc,tr); 
 
 % Converts from (uM N/s) to (nM N/d)
 cnvrt = 1000*3600*24;
-bgc.remox      = diag.RemOx      * cnvrt;	   % nM C/d
-bgc.ammox      = diag.Ammox      * cnvrt;	   % nM n/d
-bgc.anammox    = 2.0 * diag.Anammox * cnvrt;       % nM N/d : Units of N, not N2
-bgc.nitrox     = diag.Nitrox     * cnvrt;	   % nM n/d
-bgc.remden     = diag.RemDen     * cnvrt;	   % nM C/d
-bgc.remden1    = diag.RemDen1    * cnvrt;	   % nM C/d
-bgc.remden2    = diag.RemDen2    * cnvrt;	   % nM C/d
-bgc.remden3    = diag.RemDen3    * cnvrt;	   % nM C/d
-bgc.jn2o_ao    = diag.Jn2o_ao    * cnvrt;	   % nM N/d
-bgc.jno2_ao    = diag.Jno2_ao    * cnvrt;	   % nM N/d
-bgc.jn2o_prod  = 2.0 * diag.Jn2o_prod * cnvrt;     % nM N/d : Units of N, not N2O
-bgc.jn2o_cons  = 2.0 * diag.Jn2o_cons * cnvrt;     % nM N/d : Units of N, not N2O
-bgc.jno2_prod  = diag.Jno2_prod  * cnvrt;	   % nM n/d
-bgc.jno2_cons  = diag.Jno2_cons  * cnvrt;	   % nM n/d
-bgc.sms_n2o    = sms.n2o         * cnvrt;	   % nM n/d
+bgc.remox      = diag.RemOx      * cnvrt;      % nM C/d
+bgc.ammox      = diag.Ammox      * cnvrt;      % nM n/d
+bgc.anammox    = 2.0 * diag.Anammox * cnvrt;   % nM N/d : Units of N, not N2
+bgc.nitrox     = diag.Nitrox     * cnvrt;      % nM n/d
+bgc.remden     = diag.RemDen     * cnvrt;      % nM C/d
+bgc.remden1    = diag.RemDen1    * cnvrt;      % nM C/d
+bgc.remden2    = diag.RemDen2    * cnvrt;      % nM C/d
+bgc.remden3    = diag.RemDen3    * cnvrt;      % nM C/d
+bgc.jn2o_ao    = diag.Jn2o_ao    * cnvrt;      % nM N/d
+bgc.jno2_ao    = diag.Jno2_ao    * cnvrt;      % nM N/d
+bgc.jn2o_prod  = 2.0 * diag.Jn2o_prod * cnvrt; % nM N/d : Units of N, not N2O
+bgc.jn2o_cons  = 2.0 * diag.Jn2o_cons * cnvrt; % nM N/d : Units of N, not N2O
+bgc.jno2_prod  = diag.Jno2_prod  * cnvrt;      % nM n/d
+bgc.jno2_cons  = diag.Jno2_cons  * cnvrt;      % nM n/d
+bgc.sms_n2o    = sms.n2o         * cnvrt;      % nM n/d
 
 % Other (for convenience)
 bgc.nh4tono2 = bgc.jno2_ao; % nM N/d
