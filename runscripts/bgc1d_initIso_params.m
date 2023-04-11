@@ -43,15 +43,15 @@ function bgc = bgc1d_initIso_params(bgc)
  %%%%%%% Denitrification %%%%%%%%
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  % epsilon for den1 -- NO3-->NO2
- bgc.eps_den1 = 15.0;          % Enrichment factors during denitrification 1 (permil)
+ bgc.eps_den1 = 13.0;          % Enrichment factors during denitrification 1 (permil) Kritee et al. (2012s)
  % epsilon for den2 -- NO2-->N2O
  %bgc.eps_den2 = 22.0;          % Enrichment factors during denitrification 2 (permil)
  bgc.eps_den2A = 0.0;          % Enrichment factors during denitrification 2 (permil)
  bgc.eps_den2B = 22.0;          % Enrichment factors during denitrification 2 (permil)
  bgc.eps_den2 = (bgc.eps_den2A + bgc.eps_den2B) ./ 2;
  % epsilon for den3 -- N2O-->N2
- bgc.eps_den3_Alpha = 20.0;          % Enrichment factor of N2OA during denitrification 3 (permil)
- bgc.eps_den3_Beta = 2.0;          % Enrichment factors of N2OB during denitrification 3 (permil)
+ bgc.eps_den3_Alpha = 19.8;          % Enrichment factor of N2OA during denitrification 3 (permil)
+ bgc.eps_den3_Beta = 0.0;          % Enrichment factors of N2OB during denitrification 3 (permil)
 
  % SP for ..
  % .. den2 -- NO2-->N2O:

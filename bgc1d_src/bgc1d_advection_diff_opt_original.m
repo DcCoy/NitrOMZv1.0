@@ -116,11 +116,11 @@ function [sol sadv sdiff ssms srest] = bgc1d_advection_diff(bgc)
         po4(2,end) = bgc.po4_bot;
   	if bgc.RunIsotopes
 		%%%% Top boundary conditions
-  	        i15no3(2,1) = bgc.i15no3_top;
-  	        i15no2(2,1) = bgc.i15no2_top;
-		i15nh4(2,1) = bgc.i15nh4_top;
-  	        i15n2oA(2,1) = bgc.i15n2oA_top;
-  	        i15n2oB(2,1) = bgc.i15n2oB_top;
+        i15no3(2,1) = bgc.i15no3_top;
+        i15no2(2,1) = bgc.i15no2_top;
+        i15nh4(2,1) = bgc.i15nh4_top;
+        i15n2oA(2,1) = bgc.i15n2oA_top;
+        i15n2oB(2,1) = bgc.i15n2oB_top;
 		%%%% Bottom boundary conditions
 		i15no3(2,end) = bgc.i15no3_bot;
 		i15no2(2,end) = bgc.i15no2_bot;
@@ -136,9 +136,11 @@ function [sol sadv sdiff ssms srest] = bgc1d_advection_diff(bgc)
         	nh4(1,idx)=0;i15nh4(1,idx)=0;
         	idx=(tr.n2o+tr.i15n2oA+tr.i15n2oB==0);
         	n2o(1,idx)=0;i15n2oA(1,idx)=0;i15n2oB(1,idx)=0;
-        end
+    end
 
-   	%%%% advection and diffusion
+    %%%% advection and diffusion
+    % the term "disp(- o2(1,2:end-1) .* bgc.dt./(2.*-bgc.dz) .* (bgc.wup(3:end)-bgc.wup(1:end-2)))"
+    % ...reduces to 0 for constant wup
   	o2(2,2:end-1) = o2(1,2:end-1) -bgc.wup(2:end-1).*bgc.dt./(2.*-bgc.dz) .* (o2(1,3:end)-o2(1,1:end-2)) - o2(1,2:end-1) .* bgc.dt./(2.*-bgc.dz) .* (bgc.wup(3:end)-bgc.wup(1:end-2)) ...
   	    + bgc.Kv(2:end-1) .* bgc.dt./(bgc.dz)^2 .* (o2(1,3:end) - 2 .* o2(1,2:end-1) + o2(1,1:end-2)); 
   	no3(2,2:end-1) = no3(1,2:end-1) -bgc.wup(2:end-1).*bgc.dt./(2.*-bgc.dz) .* (no3(1,3:end)-no3(1,1:end-2)) - no3(1,2:end-1) .* bgc.dt./(2.*-bgc.dz) .* (bgc.wup(3:end)-bgc.wup(1:end-2)) ... 
@@ -164,7 +166,7 @@ function [sol sadv sdiff ssms srest] = bgc1d_advection_diff(bgc)
           	    + bgc.Kv(2:end-1).*bgc.dt./(bgc.dz)^2 .* (i15n2oA(1,3:end) - 2 .* i15n2oA(1,2:end-1) + i15n2oA(1,1:end-2));
           	i15n2oB(2,2:end-1) = i15n2oB(1,2:end-1) - bgc.wup(2:end-1).*bgc.dt./(2.*-bgc.dz) .* (i15n2oB(1,3:end)-i15n2oB(1,1:end-2)) - i15n2oB(1,2:end-1) .* bgc.dt./(2.*-bgc.dz) .* (bgc.wup(3:end)-bgc.wup(1:end-2)) ...
 		+ bgc.Kv(2:end-1).*bgc.dt./(bgc.dz)^2 .* (i15n2oB(1,3:end) - 2 .* i15n2oB(1,2:end-1) + i15n2oB(1,1:end-2));	
-  	end
+    end
   	
   	%%%% Get sources minus Sinks	
 	 % First dump tracers in a structure "t"

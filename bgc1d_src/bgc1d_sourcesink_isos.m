@@ -81,12 +81,25 @@
      %----------------------------------------------------------------------
      % (4) N2O and NO2 production by ammox and nitrifier-denitrif (molN-units):
      %----------------------------------------------------------------------
-     Y = n2o_yield_nden(t.o2, bgc);
+     % nitrifier-denitrification
+     %Y = n2o_yield_nden(t.o2, bgc);
+     % via NH2OH
+     %Jnn2o_hx =Ammox .* Y.nn2o_hx_nh4;
+     %Jno2_hx = Ammox.* Y.no2_hx_nh4;
+     % via NH4->NO2->N2O
+     %Jnn2o_nden = Ammox .* Y.nn2o_nden_nh4;
+     % set hybrid production to 0
+     %Jnn2o_hy = Ammox .* 0.0;
+
+     % hybrid N2O production
+     Y = n2o_yield_hybrid(t.o2,(t.no2+t.i15no2),bgc);
      % via NH2OH
      Jnn2o_hx =Ammox .* Y.nn2o_hx_nh4;
      Jno2_hx = Ammox.* Y.no2_hx_nh4;
-     % via NH4->NO2->N2O
-     Jnn2o_nden = Ammox .* Y.nn2o_nden_nh4;
+     % via hybrid production
+     Jnn2o_hy = Ammox .* Y.nn2o_hy_nh4;
+     % set nitridier-denitrification to 0
+     Jnn2o_nden = Ammox .* 0.0;
 
      % % % % % % % % % % % %
      % % %   J-ANOXIC  % % %
@@ -118,8 +131,8 @@
  sms.no3  =  (Nitrox - bgc.NCden1 .* RemDen1- bgc.NCden4 .* RemDen4) .*bgc.r14no3;
  sms.poc  =  (- RemOx - (RemDen1+RemDen2+RemDen3+RemDen4));
  sms.po4  =  (+bgc.PCrem .* (RemOx) + bgc.PCden1 .* RemDen1 + bgc.PCden2 .* RemDen2 + bgc.PCden3 .* RemDen3+ bgc.PCden3 .* RemDen4);
- sms.nh4  =  (+ bgc.NCrem .* (RemOx + RemDen1 + RemDen2 + RemDen3 + RemDen4) - (Jnn2o_hx+Jno2_hx+Jnn2o_nden) - Anammox) .*bgc.r14nh4;
- sms.no2  =  (Jno2_hx + bgc.NCden1 .* RemDen1 - bgc.NCden2 .* RemDen2 - Anammox - Nitrox) .*bgc.r14no2;
+ sms.nh4  =  (+ bgc.NCrem .* (RemOx + RemDen1 + RemDen2 + RemDen3 + RemDen4) - (Jnn2o_hx+Jno2_hx+Jnn2o_nden+Jnn2o_hy) - Anammox) .*bgc.r14nh4;
+ sms.no2  =  (Jno2_hx + bgc.NCden1 .* RemDen1 - bgc.NCden2 .* RemDen2 - Anammox - Nitrox - Jnn2o_hy) .*bgc.r14no2; % internal NO2- source: take out - Jnn2o_hy
  sms.n2   =  (bgc.NCden3 .* RemDen3 + Anammox);
  sms.kpoc = -(KRemOx + KRemDen1 + KRemDen2 + KRemDen3);
  % N2O individual SMSs
@@ -128,6 +141,7 @@
  sms.n2oind.den2  = 0.5 .* bgc.NCden2 .* RemDen2;
  sms.n2oind.den3  = - bgc.NCden3 .* RemDen3;
  sms.n2oind.den4 = 0.5 .* bgc.NCden4 .* RemDen4;
+ sms.n2oind.hybrid = 0.5 .* 2.0 .* Jnn2o_hy; % (NH4+ consumption (nM N/day) + NO2- consumption (nM N/day))/2 - internal source, multiply by 1/2
  %sms.n2oind.den3  = - bgc.altKDen3.* fexp(t.o2,bgc.KO2Den3) .*t.n2o; % with first-order rate law
 
  % N2O total SMS
@@ -136,20 +150,24 @@
      + sms.n2oind.nden ...
      + sms.n2oind.den2 ...
      + sms.n2oind.den3 ...
-     + sms.n2oind.den4);
+     + sms.n2oind.den4 ...
+     + sms.n2oind.hybrid);
  
  else
  % calculate binomial probabilities
  [p1nh4, p2nh4, p3nh4, p4nh4] = binomial(bgc.r15nh4, bgc.r15nh4);
  [p1no2, p2no2, p3no2, p4no2] = binomial(bgc.r15no2, bgc.r15no2);
  [p1no3, p2no3, p3no3, p4no3] = binomial(bgc.r15no3, bgc.r15no3);
+ %[p1hybrid, p2hybrid, p3hybrid, p4hybrid] = binomial(bgc.r15no2, bgc.r15nh4);
+ [p1hybrid, p2hybrid, p3hybrid, p4hybrid] = binomial(bgc.r15nh4, bgc.r15nh4);
 
  % N2O total SMS
  sms.n2o = (p4nh4 .* sms.n2oind.ammox ...
      + p4nh4 .* sms.n2oind.nden ...
      + p4no2 .* sms.n2oind.den2 ...
      + sms.n2oind.den3 ...
-     + p4no3 .* sms.n2oind.den4);
+     + p4no3 .* sms.n2oind.den4 ...
+     + p4hybrid .* sms.n2oind.hybrid);
 
  
 	 % Update 15N/N ratios
@@ -163,23 +181,27 @@
 	            + bgc.r15no3 .* bgc.alpha_den1 .* bgc.NCden1 .* RemDen1 ...
 	    	    - bgc.r15no2 .* bgc.alpha_den2 .* bgc.NCden2 .* RemDen2 ...
 	            - bgc.r15no2 .* bgc.alpha_ax_no2 .* Anammox ...
-	            - bgc.r15no2 .* bgc.alpha_nitrox .* Nitrox ;
+	            - bgc.r15no2 .* bgc.alpha_nitrox .* Nitrox ...
+                - bgc.r15no2 .* Jnn2o_hy; % internal NO2- source: take this last line out
 	 sms.i15nh4 = bgc.r15norg.* bgc.NCrem .* (RemOx + RemDen1 + RemDen2 + RemDen3 + RemDen4) ...
 	            - bgc.r15nh4 .* (bgc.alpha_ammox_no2 .* Jno2_hx) ...
 	 	        - bgc.r15nh4 .* (bgc.alpha_ammox_n2o .* Jnn2o_hx + bgc.alpha_nden_n2o .* Jnn2o_nden) ...
-		        - bgc.r15nh4 .* bgc.alpha_ax_nh4 .* Anammox;
+		        - bgc.r15nh4 .* bgc.alpha_ax_nh4 .* Anammox ...
+                - bgc.r15nh4 .* Jnn2o_hy;
 	 % N2O indivisual SMS 
 
      sms.i15n2oA = p2nh4 .* bgc.alpha_ammox_n2oA .* sms.n2oind.ammox ...
                  + p2nh4 .* bgc.alpha_nden_n2oA .* sms.n2oind.nden ...
                  + p2no2 .* bgc.alpha_den2A  .* sms.n2oind.den2 ...
                  + p2no3 .* bgc.alpha_den2A  .* sms.n2oind.den4 ...
-                 + bgc.r15n2oA .* bgc.alpha_den3_Alpha .* sms.n2oind.den3;
+                 + bgc.r15n2oA .* bgc.alpha_den3_Alpha .* sms.n2oind.den3 ...
+                 + (p2hybrid + p3hybrid) ./ 2 .* bgc.alpha_ammox_n2oA .* sms.n2oind.hybrid;
      sms.i15n2oB = p3nh4 .* bgc.alpha_ammox_n2oB .* sms.n2oind.ammox ...
                  + p3nh4 .* bgc.alpha_nden_n2oB .* sms.n2oind.nden ...
                  + p3no2 .* bgc.alpha_den2B  .* sms.n2oind.den2 ...
                  + p3no3 .* bgc.alpha_den2B  .* sms.n2oind.den4 ...
-                 + bgc.r15n2oB .* bgc.alpha_den3_Beta .* sms.n2oind.den3;
+                 + bgc.r15n2oB .* bgc.alpha_den3_Beta .* sms.n2oind.den3 ...
+                 + (p2hybrid + p3hybrid) ./ 2 .* bgc.alpha_ammox_n2oB .* sms.n2oind.hybrid;
 
  end
 %---------------------------------------------------------------------- 
@@ -195,12 +217,13 @@ diag.RemDen3    = RemDen3;                                     % mmolC/m3/s
 diag.RemDen4    = RemDen4;                                     % mmolC/m3/s
 diag.RemDen     = RemDen1 + RemDen2 + RemDen3 + RemDen4;       % mmolC/m3/s
 diag.Jno2_ao    = Jno2_hx;                                     % mmolN/m3/s
-diag.Jn2o_ao    = Jnn2o_hx + Jnn2o_nden;                       % mmolN/m3/s
-diag.Jn2o_prod  = sms.n2oind.ammox + sms.n2oind.nden + sms.n2oind.den2 + sms.n2oind.den4;         % mmolN2O/m3/s
+diag.Jn2o_ao    = Jnn2o_hx + Jnn2o_nden + Jnn2o_hy;                       % mmolN/m3/s
+diag.Jn2o_prod  = sms.n2oind.ammox + sms.n2oind.nden + sms.n2oind.den2 + sms.n2oind.den4 + sms.n2oind.hybrid;         % mmolN2O/m3/s
 diag.Jn2o_cons  = sms.n2oind.den3;                             % mmolN2O/m3/s
 diag.Jno2_prod  = Jno2_hx + bgc.NCden1 .* RemDen1;             % mmolN/m3/s
 diag.Jno2_cons  = - bgc.NCden2 .* RemDen2 - Anammox - Nitrox;  % mmolN/m3/s
 diag.kpoc       = -(RemDen1 -RemDen2-RemDen3-RemOx) ./ t.poc; % 1/s
+diag.Hybrid     = Jnn2o_hy;                                     % mmolN2/m3/s
 %---------------------------------------------------------------------- 
 if bgc.RunIsotopes
 	sms.r15no3=bgc.r15no3;

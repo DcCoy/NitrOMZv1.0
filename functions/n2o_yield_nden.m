@@ -41,7 +41,9 @@ function Y = n2o_yield_nden(o2,bgc);
      % get yields for Hydroxylamine pathway
      Y.nn2o_hx_nh4 = b1./(b1+1);
      % get yields for nitrifier-denitrification pathway
-     Y.nn2o_nden_nh4 = 1./((b1+1).*(1+(b1+1)./a1).*o2);
+     %Y.nn2o_nden_nh4 = 1./((b1+1).*(1+(b1+1)./a1).*o2); % CLK: I think this is a typo. Should be: 1./((b1+1).*(1+(b1+1)./a1.*o2))
+     Y.nn2o_nden_nh4 =  1./((b1+1).*(1+(b1+1)./a1.*o2));
+     %Y.nn2o_nden_nh4 = 1./((b1+1).*(1+(b1+1)./a1.*o2));
      Y.no2_nden_nh4 = -Y.nn2o_nden_nh4; % nh4->no2->n2o
      Y.no2_hx_nh4 = 1-Y.nn2o_hx_nh4-Y.nn2o_nden_nh4;
      % Check mass balance

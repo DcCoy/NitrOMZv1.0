@@ -58,6 +58,12 @@ function bgc = bgc1d_initbgc_params_original(bgc)
  bgc.KNO2Ax  = 0.5;                  % Half sat. constant of NO2 for anammox (mmolNO2/m3)
  bgc.KO2Ax = 0.886;                               % 1.0     %
 
+%%%%%%%%%% Hybrid N2O production %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+bgc.yHy     = 0.138 ;
+bgc.KNO2Hy  = 0.1;
+bgc.KO2Hy   = 0.19;          % O2 poisoning constant for hybrid N2O production
+
  %%%%%% N2O prod via ammox %%%%%%
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
