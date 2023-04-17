@@ -104,10 +104,10 @@ end
 
 %%%%%% Upwelling speed %%%%%%%%%
 % Depth-dependent velocity requires a forcing file (set in bgc1d_initialize_DepParam.m)
-bgc.wup_param = 2.0 * 7.972e-8; %4.0 * 7.972e-8;% 1.8395e-7; % m/s  % note: 10 m/y = 3.1710e-07 m/s % v5.4: 1.683e-7;
+bgc.wup_param = 2.0 * 7.972e-8; % 1.8395e-7; % m/s  % note: 10 m/y = 3.1710e-07 m/s % v5.4: 1.683e-7;
 
 %%%%%%%%%%% Diffusion %%%%%%%%%%
-bgc.Kv_param  = 2.0 * 1.701e-5; % constant vertical diffusion coefficient in m^2/s % v5.4: 1.701e-5;
+bgc.Kv_param  = 2.0 * 1.701e-5; %2.0 * 1.701e-5 % constant vertical diffusion coefficient in m^2/s % v5.4: 1.701e-5;
 % For sigmoidal Kv, use the following parameters
 bgc.Kv_top = 0.70 * 2.0 * 1.701e-5;
 bgc.Kv_bot = 1.00 * 2.0 * 1.701e-5;
