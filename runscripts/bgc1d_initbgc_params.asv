@@ -82,14 +82,14 @@ bgc.KNO3Den1 = 0.4;        % Half sat. constant of NO3 for denitrif1 (mmolNO3/m3
 % Denitrif2: NO2 --> N2O
 %bgc.KDen2 = 0.08/86400;% Max. denitrif2 rate (1/s) %v5.4: 0.08/6/(86400);
 %bgc.KDen2 = 0.00012/86400; % Max. denitrif2 rate (1/s) - CLK ETNP coastal
-bgc.KDen2 =  0.00032/86400; %0.000016/86400; % Max. denitrif2 rate (1/s) - CLK ETNP offshore
+bgc.KDen2 =  0.00016/86400; %0.000016/86400; % Max. denitrif2 rate (1/s) - CLK ETNP offshore
 bgc.KO2Den2 = 0.9434;         % O2 poisoning constant for denitrif2 (mmolO2/m3) - CLK ETNP 2018 rates (1/1.06)
 bgc.KNO2Den2 = 0.05;       % Half sat. constant of NO2 for denitrification2 (mmolNO3/m3) %v5.4: 0.5;
 
 % Denitrif3: N2O --> N2
 %bgc.KDen3 = 0.0455/86400;   % Max. denitrif3 rate (1/s) %v5.4: 0.08/3/(86400);
 %bgc.KDen3 = 0.00020/86400; % Max. denitrif3 rate (1/s)  - Sun 2021b coastal
-bgc.KDen3 =  0.004/86400; %0.00036/86400; % Max. denitrif3 rate (1/s)  - Sun 2021b offshore
+bgc.KDen3 = 0.0025/86400; %0.00036/86400; % Max. denitrif3 rate (1/s)  - Sun 2021b offshore
 %bgc.KDen3 = 0.00016/86400; % Max. denitrif3 rate (1/s)  - Babbin 2015
 bgc.KO2Den3 = 0.11;         % O2 poisoning constant for denitrif3 (mmolO2/m3) %v5.4: 0.0292;
 bgc.KN2ODen3 = 0.2;         % Half sat. constant of N2O for denitrification3 (mmolNO3/m3) %v5.4: 0.02;
@@ -97,7 +97,7 @@ bgc.KN2ODen3 = 0.2;         % Half sat. constant of N2O for denitrification3 (mm
 % Denitrif4: NO3 --> N2O
 %bgc.KDen4 = 0.08/6/(86400);    % Max. denitrif2 rate (1/s)
 %bgc.KDen4 = 0.00075/86400;      % Max. denitrif2 rate (1/s) - CLK ETNP coastal
-bgc.KDen4 = 0.0025/(86400); %0.00033/(86400);  % Max. denitrif2 rate (1/s) - CLK ETNP offshore
+bgc.KDen4 = 0.0005/(86400); %0.00033/(86400);  % Max. denitrif2 rate (1/s) - CLK ETNP offshore
 bgc.KO2Den4 = 3.3333;           %  O2 poisoning constant for denitrif4 (mmolO2/m3) - CLK ETNP 2018 rates (1/0.3)
 %bgc.KO2Den4 = 5.71;            %  O2 poisoning constant for denitrif4 (mmolO2/m3)- Frey et al., 2020 (Figure 4c)
 bgc.KNO3Den4 = 0.5;             % Half sat. constant of NO2 for denitrification2 (mmolNO3/m3)

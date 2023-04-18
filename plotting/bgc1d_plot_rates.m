@@ -8,7 +8,8 @@ A.data = 1;
 A.fact = 1;
 A.oxy_threshold = 1.0;	% o2 threshold ofr oxycline
 A.mode = 'oxycline'; % 'oxycline' references depth to oxycline depth (default)
-A.var = {'ammox','nitrox','nh4ton2o','n2onetden','no3tono2','no2ton2o','n2oton2','anammox'};
+%A.var = {'ammox','nitrox','nh4ton2o','n2onetden','no3tono2','no2ton2o','n2oton2','anammox'};
+A.var = {'ammox','nitrox','nh4ton2o','no3tono2','no3ton2o','no2ton2o','n2oton2','anammox'};
 A.fig = 0;
 A.col = [0 0 0];
 A = parse_pv_pairs(A,varargin);
@@ -76,7 +77,7 @@ for indv=1:nvar;
 	plot(var_plot,bgc.zgrid,'-','color',A.col,'linewidth',3)
 	title([varname])
 	ylabel('z (m)')
-	xlabel([varname ' units'])
+	xlabel([varname ' nM N/d'])
 	ylim([bgc.zbottom bgc.ztop]);
 	xlim([var_range(1)-var_span/10 var_range(2)+var_span/10]);
 	grid on; box on; 

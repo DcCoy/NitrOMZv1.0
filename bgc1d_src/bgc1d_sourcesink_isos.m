@@ -217,7 +217,7 @@ diag.RemDen3    = RemDen3;                                     % mmolC/m3/s
 diag.RemDen4    = RemDen4;                                     % mmolC/m3/s
 diag.RemDen     = RemDen1 + RemDen2 + RemDen3 + RemDen4;       % mmolC/m3/s
 diag.Jno2_ao    = Jno2_hx;                                     % mmolN/m3/s
-diag.Jn2o_ao    = Jnn2o_hx + Jnn2o_nden + Jnn2o_hy;                       % mmolN/m3/s
+diag.Jn2o_ao    = Jnn2o_hx + Jnn2o_nden + 2 .* Jnn2o_hy;       % mmolN/m3/s % hybrid rate is nM NH4+ consumption/day = nM N2O produced/day
 diag.Jn2o_prod  = sms.n2oind.ammox + sms.n2oind.nden + sms.n2oind.den2 + sms.n2oind.den4 + sms.n2oind.hybrid;         % mmolN2O/m3/s
 diag.Jn2o_cons  = sms.n2oind.den3;                             % mmolN2O/m3/s
 diag.Jno2_prod  = Jno2_hx + bgc.NCden1 .* RemDen1;             % mmolN/m3/s

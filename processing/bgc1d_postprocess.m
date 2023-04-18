@@ -92,7 +92,7 @@ end
 % Converts from (uM N/s) to (nM N/d)
 cnvrt = 1000*3600*24;
 bgc.remox      = diag.RemOx      * cnvrt;	   % nM C/d
-bgc.ammox      = diag.Ammox      * cnvrt;	   % nM n/d
+bgc.ammox      = diag.Ammox      * cnvrt;	   % nM N/d
 bgc.anammox    = 2.0 * diag.Anammox * cnvrt;       % nM N/d : Units of N, not N2
 bgc.nitrox     = diag.Nitrox     * cnvrt;	   % nM n/d
 bgc.remden     = diag.RemDen     * cnvrt;	   % nM C/d
@@ -117,17 +117,19 @@ if bgc.RunIsotopes
 	bgc.r15n2oB = bgc.i15n2oB./bgc.n2o;
  end
 
-% Other (for convenience)
+% rename nitrification rates (for convenience)
 bgc.nh4tono2 = bgc.jno2_ao; % nM N/d
 bgc.no2tono3 = bgc.nitrox;  % nm N/d
-% Denitrification rates
+bgc.nh4ton2o = bgc.jn2o_ao; % nM N/d : Units of N, not N2O
+% convert nitrate reduction from nM C/day to nM N/day
 bgc.no3tono2    = bgc.NCden1 * bgc.remden1;      % nM N/d
+% grab n2o production and consumption rates from individual sms terms
 bgc.no2ton2o    =   2 * sms.n2oind.den2 * cnvrt; % nM N/d : Units of N, not N2O
+bgc.no3ton2o    =   2 * sms.n2oind.den4 * cnvrt; % nM N/d : Units of N, not N2O
 bgc.n2oton2     = - 2 * sms.n2oind.den3 * cnvrt; % nM N/d : Units of N, not NO
 bgc.noxton2o    = bgc.no2ton2o;                  % nM N/d : Units of N, not N2O
-% N2O formation
-bgc.n2onetden   = bgc.NCden2 * bgc.remden2 - 2.0 * bgc.NCden3 * bgc.remden3; % nM N/d : Units of N, not N2O
-bgc.nh4ton2o    = bgc.jn2o_ao;                                               % nM N/d : Units of N, not N2O
+% calculate net N2O formation
+bgc.n2onetden   = bgc.NCden2 * bgc.remden2 + bgc.NCden4 * bgc.remden4 - 2.0 * bgc.NCden3 * bgc.remden3; % nM N/d : Units of N, not N2O
 % Anammox fraction
 bgc.AnammoxFrac = bgc.anammox ./ (bgc.anammox + bgc.NCden2.*bgc.remden2 + bgc.jn2o_prod); % non-dimensional
 

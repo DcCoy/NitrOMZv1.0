@@ -10,9 +10,9 @@ O2toH2O_e = 4;
 % number of electrons required to reduce HNO3 to HNO2
 HNO3toHNO2_e = 2;
 % Number of electrons required to reduce HNO2 to N2O ---> Need to check b/c # of N atoms changes
-HNO2toN2O_e = 2;
+HNO2toN2O_e = 4; % CLK: 4 electrons because it's 2 e- per HNO2, times 2 HNO2
 %numbers of electrons required to reduce HNO3 to N2O
-HNO3toN2O_e = 4;
+HNO3toN2O_e = 8;
 % Number of electrons required to reduce N2O to N2
 N2OtoN2_e = 2;
 
