@@ -25,7 +25,7 @@ bgc.depthvar_wup = 0;           % Constant (0) or depth-dependent (1) upwelling 
 bgc.depthvar_Kv  = 1;       % Constant (0) or depth-dependent (1) diffusion profile %CLK: turning off depth-dependent allows us to replicate old model
 bgc.iTstep       = 3;           % Constant (1) or variable (2) time-stepping
 bgc.depparams    = 1;			% Initialize dependent parameters that depend on bgc1d_initbgc_params 
-bgc.RestoringOff = 1;	        % If (1), turns restoring off for all variables
+bgc.RestoringOff = 0;	        % If (1), turns restoring off for all variables
 bgc.forceanoxic  = 0;           % If (1), force anoxia over a given depth range
 bgc.tauZvar      = 1;           % If (1), use a depth-dependent restoring time-scale (requires bgc.Tau_profiles)
 bgc.RunIsotopes = true; % true -> run with isotopes
@@ -104,7 +104,7 @@ end
 
 %%%%%% Upwelling speed %%%%%%%%%
 % Depth-dependent velocity requires a forcing file (set in bgc1d_initialize_DepParam.m)
-bgc.wup_param = 2.0 * 7.972e-8; % 1.8395e-7; % m/s  % note: 10 m/y = 3.1710e-07 m/s % v5.4: 1.683e-7;
+bgc.wup_param = 6.0 * 7.972e-8; %2.0 * 7.972e-8; % 1.8395e-7; % m/s  % note: 10 m/y = 3.1710e-07 m/s % v5.4: 1.683e-7;
 
 %%%%%%%%%%% Diffusion %%%%%%%%%%
 bgc.Kv_param  = 2.0 * 1.701e-5; %2.0 * 1.701e-5 % constant vertical diffusion coefficient in m^2/s % v5.4: 1.701e-5;

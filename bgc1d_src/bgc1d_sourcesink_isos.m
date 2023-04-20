@@ -77,6 +77,7 @@
      % (3) Nitrite oxidation (molN-units):
      %----------------------------------------------------------------------
      Nitrox = bgc.KNo .*  mm1(t.o2,bgc.KO2No) .* mm1_Iso(t.no2,t.i15no2,bgc.KNO2No);
+     %Nitrox = bgc.KNo .* mm1_Iso(t.no2,t.i15no2,bgc.KNO2No); % allow anoxic nitrite oxidation
 
      %----------------------------------------------------------------------
      % (4) N2O and NO2 production by ammox and nitrifier-denitrif (molN-units):
