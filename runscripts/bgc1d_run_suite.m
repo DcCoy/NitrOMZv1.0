@@ -58,7 +58,11 @@ else
    % Run individually
    for i = 1:length(ParVals)
       tic;
-        [bgc_suite{i}.sol_time, ~, ~, ~, ~] = bgc1d_advection_diff_opt(bgc_suite{i});
+      if bgc.RunIsotopes
+          [bgc_suite{i}.sol_time, ~, ~, ~, ~] = bgc1d_advection_diff_opt_original(bgc_suite{i});
+      else
+          [bgc_suite{i}.sol_time, ~, ~, ~, ~] = bgc1d_advection_diff_opt(bgc_suite{i});
+      end
         bgc_suite{i}.RunTime = toc;
     end
 end
@@ -66,9 +70,9 @@ end
 % Process observations to validate the model solution
 Tracer.name = {'o2' 'no3' 'poc' 'po4' 'n2o' 'nh4' 'no2' 'n2'};
 if strcmp(bgc_suite{1}.region,'ETNP')
-    load([bgc_suite{1}.root,'/data/compilation_ETNP_gridded.mat']);
+    load([bgc_suite{1}.root,'/data/compilation_ETNP_offshore.mat']);
    for i = 1:length(ParVals)
-      Data{i} = proc_data(bgc_suite{i},compilation_ETNP_gridded,Tracer.name);
+      Data{i} = proc_data(bgc_suite{i},compilation_offshore,Tracer.name);
       bgc_suite{i} = bgc1d_postprocess(bgc_suite{i}, Data{i});
    end
 elseif strcmp(bgc.region,'ETSP')

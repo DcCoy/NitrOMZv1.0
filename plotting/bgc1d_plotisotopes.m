@@ -9,7 +9,8 @@ function bgc1d_plotisotopes(bgc)
 
  figure('units','inches')
  pos = get(gcf,'pos');
- set(gcf,'pos',[pos(1) pos(2) 10 7])
+ set(gcf,'pos',[pos(1) pos(2) 5 7]) % for print
+ %set(gcf,'pos',[pos(1) pos(2) 10 7]) % for model evaluation
 
  idx = find(bgc.no2>0.005);
  blue = [0, 0.4470, 0.7410];
@@ -21,51 +22,47 @@ function bgc1d_plotisotopes(bgc)
 
  subplot(2,2,1)
  plot(bgc.d15no3,bgc.zgrid,'color',blue,'linewidth',3)
- grid on; hold on
+ hold on; box on;
  s=scatter(bgc.Data_d15no3(~isnan(bgc.Data_d15no3)), bgc.zgrid(~isnan(bgc.Data_d15no3)));
  s.LineWidth = 0.6;
  s.MarkerEdgeColor = 'k';
  s.MarkerFaceColor = blue;
  ylabel('z (m)')
- xlabel(char(8240))
- title('\delta^{15}N-NO_3^-')
+ xlabel(insertAfter('\delta^{15}N-NO_3^- ()','(',char(8240)))
  ylim( [bgc.zbottom bgc.ztop]);
  legend('model', 'data', 'Location', 'southwest')
 
  subplot(2,2,2)
- plot(bgc.d15no2(idx),bgc.zgrid(idx),'color',red,'linewidth',3)
- grid on; hold on
+ plot(bgc.d15no2(idx),bgc.zgrid(idx),'color',yellow,'linewidth',3)
+ hold on; box on;
  s=scatter(bgc.Data_d15no2(~isnan(bgc.Data_d15no2)), bgc.zgrid(~isnan(bgc.Data_d15no2)));
  s.LineWidth = 0.6;
  s.MarkerEdgeColor = 'k';
- s.MarkerFaceColor = red;
+ s.MarkerFaceColor = yellow;
  ylabel('z (m)')
- xlabel(char(8240))
- title('\delta^{15}N-NO_2^-')
+ xlabel(insertAfter('\delta^{15}N-NO_2^- ()','(',char(8240)))
  ylim( [bgc.zbottom bgc.ztop]);
 
  subplot(2,2,3)
  plot(bgc.d15n2oA,bgc.zgrid,'color',purple,'linewidth',3)
- grid on; hold on
+ hold on; box on;
  s=scatter(bgc.Data_d15Na(~isnan(bgc.Data_d15Na)), bgc.zgrid(~isnan(bgc.Data_d15Na)));
  s.LineWidth = 0.6;
  s.MarkerEdgeColor = 'k';
  s.MarkerFaceColor = purple;
  ylabel('z (m)')
- xlabel(char(8240))
- title('\delta^{15}N-N_2O^{\alpha}')
+ xlabel(insertAfter('\delta^{15}N-N_2O^{\alpha} ()','(',char(8240)))
  ylim( [bgc.zbottom bgc.ztop]);
 
  subplot(2,2,4)
  plot(bgc.d15n2oB,bgc.zgrid,'color',green,'linewidth',3)
- grid on; hold on
+ hold on; box on;
  s=scatter(bgc.Data_d15Nb(~isnan(bgc.Data_d15Nb)), bgc.zgrid(~isnan(bgc.Data_d15Nb)));
  s.LineWidth = 0.6;
  s.MarkerEdgeColor = 'k';
  s.MarkerFaceColor = green;
  ylabel('z (m)')
- xlabel(char(8240))
- title('\delta^{15}N-N_2O^{\beta}')
+ xlabel(insertAfter('\delta^{15}N-N_2O^{\beta} ()','(',char(8240)))
  ylim( [bgc.zbottom bgc.ztop]);
 
  end

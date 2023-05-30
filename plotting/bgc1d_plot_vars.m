@@ -10,9 +10,13 @@ A.var = {'o2','po4','no3','no2','nh4','n2o','nstar','n2','poc'};
 A.fig = 0;
 A.col = [0 0 0];
 A = parse_pv_pairs(A,varargin);
+A.xlabels = {'[O_2]','[PO_4^{3-}]','[NO_3^-]','[NO_2^-]','[NH_4^+]','[N_2O]','N^*','[N_2]','[POC]'};
 
 if A.fig==0
-	hfig = figure;
+	%hfig = figure; % for model evaluation
+    hfig = figure('units','inches'); % for print
+    pos = get(gcf,'pos');
+    set(gcf,'pos',[pos(1) pos(2) 7 7])
 else
 	hfig = figure(A.fig);
 end
@@ -48,13 +52,15 @@ for indv=1:nvar;
 		hold on; 
 	end
 	plot(var_plot,bgc.zgrid,'-','color',A.col,'linewidth',3)
-	title([varname])
+	%title([varname])
 	ylabel('z (m)')
-	xlabel([varname ' units'])
+    xlabel([A.xlabels{indv} ' (\muM)'])
+	%xlabel([varname ' (\mu M)'])
 	ylim([bgc.zbottom bgc.ztop]);
 	xlim([var_range(1)-var_span/10 var_range(2)+var_span/10]);
-	grid on; box on; 
+	%grid on; box on;
+    box on;
 end
-print('../plotting/plots/bgc1d_vars','-dpng')  % temporary fix to get plots to save out
+%print('../plotting/plots/bgc1d_vars','-dpng')  % temporary fix to get plots to save out
 %print('-dpng',['plots/bgc1d_vars']);
 

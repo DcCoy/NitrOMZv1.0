@@ -10,12 +10,19 @@ A.oxy_threshold = 1.0;	% o2 threshold ofr oxycline
 A.mode = 'oxycline'; % 'oxycline' references depth to oxycline depth (default)
 %A.var = {'ammox','nitrox','nh4ton2o','n2onetden','no3tono2','no2ton2o','n2oton2','anammox'};
 A.var = {'ammox','nitrox','nh4ton2o','no3tono2','no3ton2o','no2ton2o','n2oton2','anammox'};
+A.xlabels = {'NH_4^+ \rightarrow NO_2^-','NO_2^- \rightarrow NO_3^-',...
+    'NH_4^+ \rightarrow N_2O', 'NO_3^- \rightarrow NO_2^-',...
+    'NO_3^- \rightarrow N_2O','NO_2^- \rightarrow N_2O',...
+    'N_2O \rightarrow N_2','anammox'};
 A.fig = 0;
 A.col = [0 0 0];
 A = parse_pv_pairs(A,varargin);
 
 if A.fig==0
-	hfig = figure;
+	%hfig = figure; % for model evaluation
+    hfig = figure('units','inches'); % for print
+    pos = get(gcf,'pos');
+    set(gcf,'pos',[pos(1) pos(2) 8.5 7])
 else
 	hfig = figure(A.fig);
 end
@@ -75,14 +82,16 @@ for indv=1:nvar;
 		hold on; 
 	end
 	plot(var_plot,bgc.zgrid,'-','color',A.col,'linewidth',3)
-	title([varname])
+	%title([varname])
 	ylabel('z (m)')
-	xlabel([varname ' nM N/d'])
+    xlabel([A.xlabels{indv} ' (nM N/d)'])
+	%xlabel([varname ' nM N/d'])
 	ylim([bgc.zbottom bgc.ztop]);
 	xlim([var_range(1)-var_span/10 var_range(2)+var_span/10]);
-	grid on; box on; 
+	%grid on; box on;
+    box on;
 end
-print('../plotting/plots/bgc1d_rates','-dpng'); % temporary fix to get plots to save out
+%print('../plotting/plots/bgc1d_rates','-dpng'); % temporary fix to get plots to save out
 %print('-dpng',['plots/bgc1d_rates']);
 
 

@@ -330,5 +330,6 @@ function [sol sadv sdiff ssms srest] = bgc1d_advection_diff(bgc)
   if bgc.SaveRestart == 1
           rst = squeeze(sol(end,:,:));
           endtime = num2str(bgc.nt*bgc.dt/3600/24/365,'%5.1f');
+          disp([bgc.root, '/restart/', bgc.RunName,'_restart_',endtime,'.mat'])
           save([bgc.root, '/restart/', bgc.RunName,'_restart_',endtime,'.mat'],'rst');
   end	

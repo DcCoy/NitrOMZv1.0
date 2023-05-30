@@ -14,11 +14,11 @@ run('../bgc1d_paths_init.m');
 bgc.root        = my_root;            
 
 %%%%%%% User specific  %%%%%%%%%
-bgc.RunName      = 'spinup_ETNP'; % Set name of run
+bgc.RunName      = 'spinup_ETNP'; %'../saveout/spinup_ETNP'; % Set name of run - CLK: need to remove ../saveout/ prefix for old adv diff script
 bgc.region       = 'ETNP';      % Set region ('ETSP','ETNP', or a custom region)
 bgc.visible      = 'on';        % If ('on)' then show figures in window, 'off' to make invisible
 bgc.flux_diag    = 0;           % If (1) then save fluxes online
-bgc.FromRestart  = 0;           % If (1) then initialize from restart? (0) No
+bgc.FromRestart  = 1;           % If (1) then initialize from restart? (0) No
 bgc.SaveRestart  = 0;           % If (1) then save restart file? (0) No
 bgc.varsink      = 1;           % If (1) then use Martin curve, else use constant sinking speed. 
 bgc.depthvar_wup = 0;           % Constant (0) or depth-dependent (1) upwelling velocity
@@ -33,7 +33,7 @@ bgc.RunIsotopes = true; % true -> run with isotopes
 %%%%%%% Data sources for wup, Tau, Restart  %%%%%%%%%
 bgc.wup_profile  = '/data/vertical_CESM.mat'; % vertical velocities
 bgc.Tau_profiles = '/data/Tau_restoring.mat'; % Depth dependent Restoring timescale
-bgc.RestartFile  = 'ETNP_restart.mat'; % restart file
+bgc.RestartFile  = 'spinup_ETNP_restart_158.5.mat'; % restart file
 
 %%%%%%%% Vertical grid %%%%%%%%%
 bgc.npt = 130; % % number of mesh points for solution (for IVP)
@@ -104,13 +104,16 @@ end
 
 %%%%%% Upwelling speed %%%%%%%%%
 % Depth-dependent velocity requires a forcing file (set in bgc1d_initialize_DepParam.m)
-bgc.wup_param = 6.0 * 7.972e-8; %2.0 * 7.972e-8; % 1.8395e-7; % m/s  % note: 10 m/y = 3.1710e-07 m/s % v5.4: 1.683e-7;
+%bgc.wup_param = 1.8395e-7; % m/s  % note: 10 m/y = 3.1710e-07 m/s % v5.4: 1.683e-7;
+bgc.wup_param = 2.0 * 7.972e-8; %2.0 * 7.972e-8; % m/s for anoxic nitrite ox.
 
 %%%%%%%%%%% Diffusion %%%%%%%%%%
 bgc.Kv_param  = 2.0 * 1.701e-5; %2.0 * 1.701e-5 % constant vertical diffusion coefficient in m^2/s % v5.4: 1.701e-5;
 % For sigmoidal Kv, use the following parameters
-bgc.Kv_top = 0.70 * 2.0 * 1.701e-5;
-bgc.Kv_bot = 1.00 * 2.0 * 1.701e-5;
+%bgc.Kv_top = 0.70 * 1.5 * 1.701e-5; % -9 POC flux scenario
+%bgc.Kv_bot = 1.00 * 1.5 * 1.701e-5; % -9 POC flux scenario
+bgc.Kv_top = 0.70 * 2.0 * 1.701e-5; % -12 POC flux scenario
+bgc.Kv_bot = 1.00 * 2.0 * 1.701e-5; % -12 POC flux scenario
 bgc.Kv_flex = -250;
 bgc.Kv_width = 300;
 

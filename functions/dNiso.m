@@ -7,7 +7,7 @@ A.d15N = nan;
 A = parse_pv_pairs(A, varargin);
 
 % Reference 15N/14N
-Nstd1 =  0.3663/99.6337;
+Nstd1 =  0.0036765;  % 0.3663/99.6337; [De Bièvre et al., 1996] 
 Nstd2 =  0.3663/100.0;
 
 if ~isnan(A.d15N(1)) & ~isnan(A.N(1))

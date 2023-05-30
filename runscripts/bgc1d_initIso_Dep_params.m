@@ -20,6 +20,10 @@
  bgc.alpha_nden_n2o = 1.0 /(1.0 + bgc.eps_nden_n2o./1000.0);    % Fractionation factor during nitrifier-denitrification (permil)
  bgc.alpha_nden_n2oA = 1.0 / (1.0 + bgc.eps_nden_n2o./1000.0);    % Fractionation factor during nitrifier-denitrification (permil)
  bgc.alpha_nden_n2oB = 1.0 / (1.0 + bgc.eps_nden_n2o./1000.0);    % Fractionation factor during nitrifier-denitrification (permil)
+  % Alpha for hybrid -- NO2 + NH4-->N2O:
+ bgc.alpha_hybrid_n2o = 1.0 /(1.0 + bgc.eps_hybrid_n2o./1000.0);    % Fractionation factor during nitrifier-denitrification (permil)
+ bgc.alpha_hybrid_n2oA = 1.0 / (1.0 + bgc.eps_hybrid_n2o./1000.0);    % Fractionation factor during nitrifier-denitrification (permil)
+ bgc.alpha_hybrid_n2oB = 1.0 / (1.0 + bgc.eps_hybrid_n2o./1000.0);    % Fractionation factor during nitrifier-denitrification (permil)
 
  %%%%%% Nitrite oxidation %%%%%%%
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -34,6 +38,10 @@
  bgc.alpha_den2 = 1.0 / (1.0 + bgc.eps_den2./1000.0);          % Fractionation factor during denitrification 2 (permil)
  bgc.alpha_den2A = 1.0 / (1.0 + bgc.eps_den2A./1000.0);          % Fractionation factor during denitrification 2 (permil)
  bgc.alpha_den2B = 1.0 / (1.0 + bgc.eps_den2B./1000.0);          % Fractionation factor during denitrification 2 (permil)
+  % Alpha for den4 -- NO3-->N2O
+ bgc.alpha_den4 = 1.0 / (1.0 + bgc.eps_den4./1000.0);          % Fractionation factor during denitrification 2 (permil)
+ bgc.alpha_den4A = 1.0 / (1.0 + bgc.eps_den4A./1000.0);          % Fractionation factor during denitrification 2 (permil)
+ bgc.alpha_den4B = 1.0 / (1.0 + bgc.eps_den4B./1000.0);          % Fractionation factor during denitrification 2 (permil)
  % Alpha for den3 -- N2OA-->N2
  bgc.alpha_den3_Alpha = 1.0 / (1.0 + bgc.eps_den3_Alpha./1000.0);          % Fractionation factor during denitrification 3 (permil)
   % Alpha for den3 -- N2OB-->N2
@@ -51,41 +59,41 @@
 
  %%%%%%%% NO3 %%%%%%%%
  % Top boundary
- ii = dNiso('d15N', bgc.d15no3_top, 'N', bgc.no3_top);
+ ii = dNiso('d15N', bgc.d15no3_top, 'i14N', bgc.no3_top);
  bgc.i15no3_top = ii.i15N;     % Concentration of 15N nitrate
  % Deep boundary
- ii = dNiso('d15N', bgc.d15no3_bot, 'N', bgc.no3_bot);
+ ii = dNiso('d15N', bgc.d15no3_bot, 'i14N', bgc.no3_bot);
  bgc.i15no3_bot = ii.i15N;     % Concentraion of 15N nitrate
 
  %%%%%%%% NO2 %%%%%%%%
  % Top boundary
- ii = dNiso('d15N', bgc.d15no2_top, 'N', bgc.no2_top);
+ ii = dNiso('d15N', bgc.d15no2_top, 'i14N', bgc.no2_top);
  bgc.i15no2_top = ii.i15N;     % Concentration of 15N nitrite
  % Deep boundary
- ii = dNiso('d15N', bgc.d15no2_bot, 'N', bgc.no2_bot);
+ ii = dNiso('d15N', bgc.d15no2_bot, 'i14N', bgc.no2_bot);
  bgc.i15no2_bot = ii.i15N;     % Concentration of 15N nitrite
 
  %%%%%%%% NH4 %%%%%%%%
  % Top boundary
- ii = dNiso('d15N', bgc.d15nh4_top, 'N', bgc.nh4_top);
+ ii = dNiso('d15N', bgc.d15nh4_top, 'i14N', bgc.nh4_top);
  bgc.i15nh4_top = ii.i15N;     % Concentration of 15N ammonia
  % Deep boundary
- ii = dNiso('d15N', bgc.d15nh4_bot, 'N', bgc.nh4_bot);
+ ii = dNiso('d15N', bgc.d15nh4_bot, 'i14N', bgc.nh4_bot);
  bgc.i15nh4_bot = ii.i15N;     % Concentration of 15N ammonia
 
  %%%%%%%% N2OA %%%%%%%%
  % Top boundary
- ii = dNiso('d15N', bgc.d15n2oA_top, 'N', bgc.n2o_top);
+ ii = dNiso('d15N', bgc.d15n2oA_top, 'i14N', bgc.n2o_top);
  bgc.i15n2oA_top = ii.i15N;     % Concentration of 15N nitrous oxide Alpha
  % Deep boundary
- ii = dNiso('d15N', bgc.d15n2oA_bot, 'N', bgc.n2o_bot);
+ ii = dNiso('d15N', bgc.d15n2oA_bot, 'i14N', bgc.n2o_bot);
  bgc.i15n2oA_bot = ii.i15N;     % Concentration of 15N nitrous oxide Alpha
 
  %%%%%%%% N2OB %%%%%%%%
  % Top boundary
- ii = dNiso('d15N', bgc.d15n2oB_top, 'N', bgc.n2o_top);
+ ii = dNiso('d15N', bgc.d15n2oB_top, 'i14N', bgc.n2o_top);
  bgc.i15n2oB_top = ii.i15N;     % Concentration of 15N nitrous oxide Beta
  % Deep boundary
- ii = dNiso('d15N', bgc.d15n2oB_bot, 'N', bgc.n2o_bot);
+ ii = dNiso('d15N', bgc.d15n2oB_bot, 'i14N', bgc.n2o_bot);
  bgc.i15n2oB_bot = ii.i15N;     % Concentration of 15N nitrous oxide Beta
 
