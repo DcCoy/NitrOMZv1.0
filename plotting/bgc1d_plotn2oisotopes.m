@@ -1,4 +1,4 @@
-function bgc1d_plotn2oisotopes(bgc)
+function bgc1d_plotn2oisotopes(bgc, bgcsp0)
 
  figure('units','inches')
  pos = get(gcf,'pos');
@@ -34,8 +34,9 @@ legend('NO_2^-','NO_3^-','NH_4^+', ...
      'Location', 'southeast')
  
  subplot(1,4,3)
- plot(bgc.d15n2oA,bgc.zgrid,'color',purple,'linewidth',3)
+ plot(bgcsp0.d15n2oA,bgcsp0.zgrid,'color',[.7 .7 .7],'linewidth',3)
  hold on; box on;
+ plot(bgc.d15n2oA,bgc.zgrid,'color',purple,'linewidth',3)
  s=scatter(bgc.Data_d15Na(~isnan(bgc.Data_d15Na)), bgc.zgrid(~isnan(bgc.Data_d15Na)));
  s.LineWidth = 0.6;
  s.MarkerEdgeColor = 'k';
@@ -43,6 +44,9 @@ legend('NO_2^-','NO_3^-','NH_4^+', ...
  %ylabel('z (m)')
  xlabel(insertAfter('\delta^{15}N-N_2O^{\alpha} ()','(',char(8240)))
  ylim( [bgc.zbottom bgc.ztop]);
+ %legend(insertAfter('\delta^{15}N^{sp}=0','0',char(8240)),...
+ %    insertAfter('\delta^{15}N^{sp}=22','22',char(8240)),...
+ %    'Location', 'southeast')
 
  subplot(1,4,4)
  plot(bgc.d15n2oB,bgc.zgrid,'color',green,'linewidth',3)
